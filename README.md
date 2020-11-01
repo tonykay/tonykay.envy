@@ -1,2 +1,2 @@
 # tonykay.envy
-Ansible envy (ENVironments in Yaml) - single system ansible centric container orchestration
+Ansible Envy (ENVironments in Yaml) collection - single system ansible centric container orchestration
