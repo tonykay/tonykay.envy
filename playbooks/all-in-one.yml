@@ -12,18 +12,18 @@
     docker_image:         rhel8-ssh
     lab_machines:
 
-      - name: control
+      - name: control1
         group: bastions 
         ip: 172.4.26.2
         ssh_port_map: "2222:22"
 
-      - name: node2
+      - name: node21
         group: appdbs 
         ip: 172.4.26.6
         ssh_port_map: "2227:22"
         exposed_port_map: "8081:80"
 
-      - name: node3
+      - name: node31
         group: appdbs 
           #        ip: 172.4.26.6
         ssh_port_map: "22"
@@ -44,7 +44,7 @@
         - networking
 
     - name: Create the individual lab hosts
-      docker_container:
+      community.docker.docker_container:
         name:               "{{ item.name }}"
         image:              "{{ docker_image }}"
         privileged:         yes
