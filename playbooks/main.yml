@@ -1,0 +1,15 @@
+---
+- name: Test collections playbook directory
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+
+  roles:
+    - envy_test_role
+
+  tasks:
+
+    - name: Hello from a collection playbook
+      debug:
+        msg: Hello from a collection playbook

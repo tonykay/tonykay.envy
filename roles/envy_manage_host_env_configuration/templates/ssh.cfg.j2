@@ -1,0 +1,15 @@
+{% for server in lab_machines %}
+Host {{ server.name }} {{ server.ip }}
+  Port {{ server.ssh_port_map | regex_replace('\:22','') }}
+  ControlPath /tmp/{{ server.name }}-%h-%r
+
+{% endfor %}
+
+Host *
+  HostName 127.0.0.1
+  User vagrant
+  IdentityFile  ssh/vagrant.private
+  ControlMaster auto
+  ControlPath /tmp/%h-%p-%r
+  ControlPersist 5m
+  StrictHostKeyChecking no
