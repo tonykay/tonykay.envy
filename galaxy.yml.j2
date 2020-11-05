@@ -1,0 +1,25 @@
+---
+namespace: {{ collection_namespace }}
+name: {{ collection_name }}
+version: {{ collection_version }}
+description: A collection of primarily roles and plays to create container based environments
+readme: README.md
+authors:
+    - Tony Kay @tony_kay
+repository: {{ collection_repo }}
+issues: {{ collection_repo }}/issues
+build_ignore:
+    - galaxy.yml.j2
+    - release.yml
+    - .github
+    - .ansiblelint.yml
+    - .yamllint.yml
+license:
+    - GPL-3.0-or-later
+tags:
+    - envy
+    - docker
+    - podman
+    - collection
+dependencies:
+    community.docker "*"
