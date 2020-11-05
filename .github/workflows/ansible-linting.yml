@@ -1,0 +1,37 @@
+# See https://github.com/marketplace/actions/ansible-lint
+name: Ansible Linting
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: centos-latest
+
+    steps:
+
+      - name: Checkout codebase
+        uses: actions/checkout@v2
+
+
+      - name: Lint Ansible Content
+        uses: ansible/ansible-lint-action@main
+        with:
+          targets: ""
+          args: ""
+
+
+#        override-deps: |
+#          ansible==2.9
+#          ansible-lint==4.2.0
+
+
+#        uses: action/setup-python@v2
+#        with:
+#          python-version: '3.x'
+#
+#      - name: Install lint dependencies
+#        run: pip3 install yamllint ansible-lint      
