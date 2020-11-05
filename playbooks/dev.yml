@@ -10,6 +10,11 @@
     docker_subnet:        172.4.26.0/16
     docker_gateway:       172.4.26.1
     docker_image:         rhel8-ssh
+
+    env_labels:
+      created_by:           envy
+      guid:                 "{{ env | default('000000') }}"
+
     lab_machines:
 
       - name: control1
@@ -31,13 +36,14 @@
   tasks:
 
     - name: Create lab docker network {{ docker_network }} with options
-      docker_network:
+      community.docker.docker_network:
         name: "{{ docker_network }}"
         driver_options:
           com.docker.network.bridge.name: "{{ docker_bridge_name }}"
-        ipam_options:
-          subnet: "{{ docker_subnet }}"
-          gateway: "{{ docker_gateway }}"
+        ipam_config:
+          - subnet:       "{{ docker_subnet }}"
+            gateway:      "{{ docker_gateway }}"
+        labels: "{{ env_labels }}"
 
       tags:
         - network
@@ -56,64 +62,12 @@
           SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
           SSH_USER:         vagrant
             #labels:  "AnsibleGroup=foo,bar=foo"
-        labels:  "{{ labels }}"
+        labels: "{{ env_labels }}"
       loop: "{{ lab_machines }}"
       loop_control:
         loop_var: env_container
       tags:
         - instances
-      vars:
-        labels:
-          a: b
-          b: c
-          d: e
+        - containers
 
 ...
-
-##  roles:
-##
-##    - envy_manage_host_env_configuration
-##    - envy_manage_instances
-##    - envy_manage_inventory
-##    - envy_manage_networks
-#
-#...
-#
-#---
-#
-## Define your lab:
-#
-#lab_machines:
-#
-#  - name: bastion
-#    group: bastions 
-#    ip: 172.4.26.2
-#    ssh_port_map: "2222:22"
-#
-#  - name: frontend1
-#    group: frontends 
-#    ip: 172.4.26.3
-#    ssh_port_map: "22.4.22"
-#
-#  - name: app1
-#    group: apps
-#    ip: 172.4.26.4
-#    ssh_port_map: "2224:22"
-#
-#  - name: app2
-#    group: apps 
-#    ip: 172.4.26.5
-#    ssh_port_map: "2225:22"
-#
-#  - name: appdb1
-#    group: appdbs 
-#    ip: 172.4.26.6
-#    ssh_port_map: "2226:22"
-#    exposed_port_map: "8080:80"
-#
-#  - name: appdb2
-#    group: appdbs 
-#    ip: 172.4.26.7
-#    ssh_port_map: "2227:22"
-#    exposed_port_map: "8081:80"
-#...
