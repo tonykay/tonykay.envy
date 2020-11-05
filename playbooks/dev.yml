@@ -9,7 +9,14 @@
     docker_bridge_name:   example
     docker_subnet:        172.4.26.0/16
     docker_gateway:       172.4.26.1
-    docker_image:         rhel8-ssh
+    vmlet_image:          rhel8-ssh
+
+    env_networks:
+      - name:             example.com
+        bridge_name:      example
+        subnet:           172.4.26.0/16
+        gateway:          172.4.26.1
+
 
     env_labels:
       created_by:           envy
@@ -19,31 +26,37 @@
 
       - name: control1
         group: bastions 
-        ip: 172.4.26.2
-        ssh_port_map: "2222:22"
+        published_ports:
+          - '22'
+          - '8080:8080'  
+          - '5432'
 
       - name: node21
         group: appdbs 
-        ip: 172.4.26.6
-        ssh_port_map: "2227:22"
-        exposed_port_map: "8081:80"
+        published_ports:
+          - '22'
+          - '5432'
+          - '8081:8080'
 
       - name: node31
         group: appdbs 
-          #        ip: 172.4.26.6
-        ssh_port_map: "22"
-#        exposed_port_map: "8081:80"
+        published_ports:
+          - '22'
+
   tasks:
 
-    - name: Create lab docker network {{ docker_network }} with options
+    - name: Create network(s) 
       community.docker.docker_network:
-        name: "{{ docker_network }}"
+        name: "{{ __network.name }}"
         driver_options:
-          com.docker.network.bridge.name: "{{ docker_bridge_name }}"
+          com.docker.network.bridge.name: "{{ __network.bridge_name }}"
         ipam_config:
-          - subnet:       "{{ docker_subnet }}"
-            gateway:      "{{ docker_gateway }}"
+          - subnet:       "{{ __network.subnet }}"
+            gateway:      "{{ __network.gateway }}"
         labels: "{{ env_labels }}"
+      loop: "{{ env_networks }}"
+      loop_control:
+        loop_var: __network
 
       tags:
         - network
@@ -52,9 +65,10 @@
     - name: Create individual env instances
       community.docker.docker_container:
         name:               "{{ env_container.name }}"
-        image:              "{{ docker_image }}"
+        image:              "{{ env_container.image | default(vmlet_image) }}"
         privileged:         yes
-        published_ports:    "{{ (( env_container.ssh_port_map | default()) + ( ',' + env_container.exposed_port_map | default())) | regex_replace(',$', '') }}"
+        published_ports:    "{{ env_container.published_ports | default([]) }}"
+          #        published_ports:    "{{ (( env_container.ssh_port_map | default()) + ( ',' + env_container.exposed_port_map | default())) | regex_replace(',$', '') }}"
         networks:
           - name:           "{{ docker_network }}"
             #            ipv4_address:   "{{ env_container.ip }}"
