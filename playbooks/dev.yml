@@ -5,43 +5,40 @@
   gather_facts: false
   become: false
   vars:
-    #    docker_network:       example.com
-    #docker_bridge_name:   example
-    # docker_subnet:        172.4.26.0/16
-    # docker_gateway:       172.4.26.1
 
+    env_name:                   default
+    env_default_domain:         example.com
     env_default_image:          rhel8-ssh
 
     env_networks:
-      - name:             example.com
-        bridge_name:      example
-        subnet:           172.4.26.0/16
-        gateway:          172.4.26.1
-
-      - name:             internal.com
-        bridge_name:      internal
+      - name:                   "{{ env_default_domain }}"
+      - name:                   internal.com
 
     env_labels:
-      created_by:           envy
-      guid:                 "{{ env | default('000000') }}"
+      created_by:               envy
+      guid:                     "{{ env | default('000000') }}"
 
-    lab_machines:
+    env_machines:
 
-      - name: control1
+      - name: control
         group: bastions 
         published_ports:
           - '22'
-          - '8080:8080'  
+          - '8080:8080'
           - '5432'
 
-      - name: node21
+      - name: app
         group: appdbs 
+        image: rhel7-ssh
+        networks:
+          - name: "{{ env_default_domain }}"
+          - name: internal.com 
         published_ports:
           - '22'
           - '5432'
           - '8081:8080'
 
-      - name: node31
+      - name: appdb
         group: appdbs 
         published_ports:
           - '22'
@@ -51,38 +48,57 @@
     - name: Create network(s) 
       community.docker.docker_network:
         name: "{{ __network.name }}"
-        driver_options:
-          com.docker.network.bridge.name: "{{ __network.bridge_name }}"
-            #        ipam_config:
-            # - subnet:       "{{ __network.subnet }}"
-            # gateway:      "{{ __network.gateway }}"
         labels: "{{ env_labels }}"
       loop: "{{ env_networks }}"
       loop_control:
         loop_var: __network
-
       tags:
         - network
         - networking
 
     - name: Create individual env instances
       community.docker.docker_container:
-        name:               "{{ env_container.name }}"
-        image:              "{{ env_container.image           | default(env_default_image) }}"
-        privileged:         "{{ env_container.privileged      | default(true) }}"
-        published_ports:    "{{ env_container.published_ports | default([]) }}"
-        networks:           "{{ env_container.networks        | default([{ 'name': env_networks[0].name}]) }}"
-          #  - name:           "{{ docker_network }}"
+        name:               "{{ __env_container.name }}"
+        image:              "{{ __env_container.image           | default(env_default_image) }}"
+        privileged:         "{{ __env_container.privileged      | default(true) }}"
+        published_ports:    "{{ __env_container.published_ports | default([]) }}"
+        networks:           "{{ __env_container.networks        | default([{ 'name': env_networks[0].name}]) }}"
         env:
           SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
           SSH_USER:         vagrant
-            #labels:  "AnsibleGroup=foo,bar=foo"
         labels: "{{ env_labels }}"
-      loop: "{{ lab_machines }}"
+      loop: "{{ env_machines }}"
       loop_control:
-        loop_var: env_container
+        loop_var: __env_container
       tags:
         - instances
         - containers
+      register: r_container_info
+
+    - name: Debug output register r_container_info
+      debug:
+        verbosity: 2
+        msg:
+          - "name is {{ __container.__env_container.name }}"
+          - "group is {{ __container.__env_container.group }}"
+          - "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+      loop: "{{ r_container_info.results }}"
+      loop_control:
+        loop_var: __container
+
+    - name: Debug output register r_container_info as json file
+      copy:
+        content: "{{ r_container_info | to_nice_json }}"
+        dest:    "/tmp/container-{{ env_name }}r-info.json"
+
+    - name: Generate in-memory inventory
+      add_host:
+        name:             "{{ __container.__env_container.name }}"
+        shortname:        "{{ __container.__env_container.name }}"
+        ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+        group:            "{{ __container.__env_container.group }}"
+      loop: "{{ r_container_info.results }}"
+      loop_control:
+        loop_var: __container
 
 ...

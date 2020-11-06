@@ -1,0 +1,81 @@
+---
+- name: Create a container based ssh based lab environment - e.g. for Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+  vars:
+    docker_network:       example.com
+    docker_bridge_name:   example
+    docker_subnet:        172.4.26.0/16
+    docker_gateway:       172.4.26.1
+    vmlet_image:         rhel8-ssh
+
+    networks:
+      - n  
+    env_labels:
+      created_by:           envy
+      guid:                 "{{ env | default('000000') }}"
+
+    lab_machines:
+
+      - name: control1
+        group: bastions 
+        published_ports:
+          - 22
+          - 8080:82  
+          - 5432
+
+          #ip: 172.4.26.2
+        ssh_port_map: "2222:22"
+
+      - name: node21
+        group: appdbs 
+        #ip: 172.4.26.6
+        ssh_port_map: "2227:22"
+        exposed_port_map: "8081:80"
+
+      - name: node31
+        group: appdbs 
+          #        ip: 172.4.26.6
+        ssh_port_map: "22"
+#        exposed_port_map: "8081:80"
+  tasks:
+
+    - name: Create lab docker network {{ docker_network }} with options
+      community.docker.docker_network:
+        name: "{{ docker_network }}"
+        driver_options:
+          com.docker.network.bridge.name: "{{ docker_bridge_name }}"
+        ipam_config:
+          - subnet:       "{{ docker_subnet }}"
+            gateway:      "{{ docker_gateway }}"
+        labels: "{{ env_labels }}"
+
+      tags:
+        - network
+        - networking
+
+    - name: Create individual env instances
+      community.docker.docker_container:
+        name:               "{{ env_container.name }}"
+        image:              "{{ env_container.image | default(vmlet_image) }}"
+        privileged:         yes
+        published_ports:    "{{ env_container.published_ports | default([]) }}"
+          #        published_ports:    "{{ (( env_container.ssh_port_map | default()) + ( ',' + env_container.exposed_port_map | default())) | regex_replace(',$', '') }}"
+        networks:
+          - name:           "{{ docker_network }}"
+            #            ipv4_address:   "{{ env_container.ip }}"
+        env:
+          SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
+          SSH_USER:         vagrant
+            #labels:  "AnsibleGroup=foo,bar=foo"
+        labels: "{{ env_labels }}"
+      loop: "{{ lab_machines }}"
+      loop_control:
+        loop_var: env_container
+      tags:
+        - instances
+        - containers
+
+...
