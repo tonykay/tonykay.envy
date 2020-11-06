@@ -12,7 +12,7 @@
 - name: Generate lab static inventory file
   template:
     src:      lab_inventory.j2
-    dest:     "env-{{ env_name }}"
+    dest:     "env-{{ env_name }}/inventory"
 
 - name: Copy vagrant key to lab/ssh
   copy:

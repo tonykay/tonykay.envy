@@ -9,6 +9,9 @@
     env_name:                   default
     env_default_domain:         example.com
     env_default_image:          rhel8-ssh
+    env_ansible_ssh_user:       vagrant
+    env_ansible_ssh_private_key_file: ~/.ssh/vagrant.pem
+      
 
     env_networks:
       - name:                   "{{ env_default_domain }}"
@@ -21,14 +24,14 @@
     env_instances:
 
       - name: control
-        group: bastions 
+        group: control_node
         published_ports:
           - '22'
           - '8080:8080'
           - '5432'
 
       - name: app
-        group: appdbs 
+        group: apps 
         image: rhel7-ssh
         networks:
           - name: "{{ env_default_domain }}"
@@ -48,7 +51,7 @@
     - name: Create network(s) 
       community.docker.docker_network:
         name: "{{ __network.name }}"
-          #  labels: "{{ env_labels }}"
+        labels: "{{ env_labels }}"
       loop: "{{ env_networks }}"
       loop_control:
         loop_var: __network
@@ -83,7 +86,7 @@
           - "name is {{ __container.__env_container.name }}"
           - "group is {{ __container.__env_container.group }}"
           - "IP is {{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
-          - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort | to_nice_json }}" #[Ports '22/tcp'].HostPort }}"
+          - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
         loop_var: __container
@@ -101,9 +104,10 @@
       add_host:
         name:             "{{ __container.__env_container.name }}"
         shortname:        "{{ __container.__env_container.name }}"
-        ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+        ansible_ssh_host: localhost
+          # ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
         group:            "{{ __container.__env_container.group }}"
-        host_ssh_port:    "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort | to_nice_json }}"
+        ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
         label: "{{ __container.__env_container.name }}"

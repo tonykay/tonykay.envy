@@ -4,15 +4,20 @@
 
 
 [all]
-app ansible_host=172.21.0.3 
-appdb ansible_host=172.21.0.4 
-control ansible_host=172.21.0.2 
+app ansible_host=localhost ansible_ssh_port=32778
+appdb ansible_host=localhost ansible_ssh_port=32779
+control ansible_host=localhost ansible_ssh_port=32776
 
 [appdbs]
-app ansible_host=172.21.0.3 
-appdb ansible_host=172.21.0.4 
+appdb ansible_host=localhost ansible_ssh_port=32779
 
-[bastions]
-control ansible_host=172.21.0.2 
+[apps]
+app ansible_host=localhost ansible_ssh_port=32778
 
-[ungrouped]
+[control_node]
+control ansible_host=localhost ansible_ssh_port=32776
+
+[all:vars]
+ansible_ssh_user: vagrant
+#remote_user: vagrant
+ansible_ssh_private_key_file: ~/.ssh/vagrant.pem
