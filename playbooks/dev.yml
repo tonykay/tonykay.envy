@@ -18,7 +18,7 @@
       created_by:               envy
       guid:                     "{{ env | default('000000') }}"
 
-    env_machines:
+    env_instances:
 
       - name: control
         group: bastions 
@@ -48,7 +48,7 @@
     - name: Create network(s) 
       community.docker.docker_network:
         name: "{{ __network.name }}"
-        labels: "{{ env_labels }}"
+          #  labels: "{{ env_labels }}"
       loop: "{{ env_networks }}"
       loop_control:
         loop_var: __network
@@ -66,30 +66,36 @@
         env:
           SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
           SSH_USER:         vagrant
-        labels: "{{ env_labels }}"
-      loop: "{{ env_machines }}"
+            #        labels: "{{ env_labels }}"
+      loop: "{{ env_instances }}"
       loop_control:
         loop_var: __env_container
       tags:
         - instances
         - containers
+        - inventory
       register: r_container_info
 
     - name: Debug output register r_container_info
       debug:
-        verbosity: 2
+        # verbosity: 2
         msg:
           - "name is {{ __container.__env_container.name }}"
           - "group is {{ __container.__env_container.group }}"
-          - "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+          - "IP is {{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+          - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort | to_nice_json }}" #[Ports '22/tcp'].HostPort }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
         loop_var: __container
+      tags:
+        - inventory
 
     - name: Debug output register r_container_info as json file
       copy:
         content: "{{ r_container_info | to_nice_json }}"
-        dest:    "/tmp/container-{{ env_name }}r-info.json"
+        dest:    "/tmp/container-{{ env_name }}-info.json"
+      tags:
+        - inventory
 
     - name: Generate in-memory inventory
       add_host:
@@ -97,8 +103,19 @@
         shortname:        "{{ __container.__env_container.name }}"
         ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
         group:            "{{ __container.__env_container.group }}"
+        host_ssh_port:    "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort | to_nice_json }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
+        label: "{{ __container.__env_container.name }}"
         loop_var: __container
+      tags:
+        - inventory
+
+    - name: Create env directory structure
+      import_role:
+        name: envy_manage_host_env_configuration
+      tags:
+        - host-config
+          # name: ../roles/envy_manage_host_env_configuration/tasks/main.yml
 
 ...

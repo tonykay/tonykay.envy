@@ -1,0 +1,18 @@
+#
+# This file was automatically created by Ansible, and may be over-written
+#
+
+
+[all]
+app ansible_host=172.21.0.3 
+appdb ansible_host=172.21.0.4 
+control ansible_host=172.21.0.2 
+
+[appdbs]
+app ansible_host=172.21.0.3 
+appdb ansible_host=172.21.0.4 
+
+[bastions]
+control ansible_host=172.21.0.2 
+
+[ungrouped]

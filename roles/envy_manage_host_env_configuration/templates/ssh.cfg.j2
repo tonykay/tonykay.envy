@@ -1,7 +1,7 @@
-{% for server in lab_machines %}
-Host {{ server.name }} {{ server.ip }}
-  Port {{ server.ssh_port_map | regex_replace('\:22','') }}
-  ControlPath /tmp/{{ server.name }}-%h-%r
+{% for instance in env_instances %}
+Host {{ instance.name }} {{ hostvars[instance.name]['ansible_ssh_host'] }}
+  Port {{ instance.ssh_port_map | regex_replace('\:22','') }}
+  ControlPath /tmp/{{ instance.name }}-%h-%r
 
 {% endfor %}
 
