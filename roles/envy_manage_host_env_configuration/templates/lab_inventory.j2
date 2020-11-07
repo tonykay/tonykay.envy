@@ -4,6 +4,10 @@
 
 [{{ item }}]
 {%   for entry in groups[item] | sort if entry != "docker_host" %}
-{{ entry }} ansible_host={{ hostvars[entry].ansible_ssh_host }} ansible_ssh_port={{ hostvars[entry].ansible_ssh_port }}
+{%      if ansible_system == "Darwin" %}
+{{ entry }} ansible_host={{ hostvars[entry].mac_ansible_ssh_host }} ansible_ssh_port={{ hostvars[entry].ansible_ssh_port }}
+{%      elif ansible_system == "linux" %}
+{{ entry }} ansible_host={{ hostvars[entry].mac_ansible_ssh_host }} ansible_ssh_port={{ hostvars[entry].ansible_ssh_port }}
+{%      endif %}
 {%   endfor %}
 {% endfor %}

@@ -1,71 +1,21 @@
 ---
-- name: Create a container based ssh based lab environment - e.g. for Ansible
+- name: Setup an envy host platform with runtime packages
   hosts: localhost
   connection: local
-  gather_facts: true
-  #become: true
+  gather_facts: false
+  become: true
   vars:
 
-    env_name:                   default
-    env_default_domain:         example.com
-    # env_default_image:          rhel8-ssh
-    env_default_image:          tonykay/centos-systemd-ssh
-    env_ansible_ssh_user:       vagrant
-
-    env_ansible_ssh_private_key_file: ~/.ssh/vagrant.pem
-
-    env_networks:
-      - name:                   "{{ env_default_domain }}"
-      - name:                   internal.com
-
-    env_labels:
-      created_by:               envy
-      guid:                     "{{ env | default('000000') }}"
-
-    env_instances:
-
-      - name: control
-        group: control_node
-        published_ports:
-          - '22'
-          - '8080:8080'
-          - '5432'
-
-      - name: app
-        group: apps 
-        # image: rhel7-ssh
-        networks:
-          - name: "{{ env_default_domain }}"
-          - name: internal.com 
-        published_ports:
-          - '22'
-          - '5432'
-          - '8081:8080'
-
-      - name: appdb
-        group: appdbs 
-        published_ports:
-          - '22'
+    envy_rhel8_packages:
+      - python3
+      - docker_container
 
   tasks:
 
-    - name: Placeholder
-      debug:
-        msg:
-          - "Insert repo login code here"
-          - "dockerhub - add support for other"
-
-    - name: Create network(s) 
-      community.docker.docker_network:
-        name: "{{ __network.name }}"
-        labels: "{{ env_labels }}"
-      loop: "{{ env_networks }}"
-      loop_control:
-        loop_var: __network
-      become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"  
-      tags:
-        - network
-        - networking
+    - name: Install container runtime packages
+      dnf:
+        name: "{{ envy_rhel_  }}"
+        state: present
 
     - name: Create individual env instances
       community.docker.docker_container:
@@ -81,7 +31,6 @@
       loop: "{{ env_instances }}"
       loop_control:
         loop_var: __env_container
-      become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
       tags:
         - instances
         - containers
@@ -113,8 +62,8 @@
       add_host:
         name:             "{{ __container.__env_container.name }}"
         shortname:        "{{ __container.__env_container.name }}"
-        mac_ansible_ssh_host: localhost
-        linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+        ansible_ssh_host: localhost
+          # ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
         group:            "{{ __container.__env_container.group }}"
         ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"

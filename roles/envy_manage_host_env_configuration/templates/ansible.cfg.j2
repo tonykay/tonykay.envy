@@ -2,12 +2,14 @@
 
 [defaults]
 inventory         = inventory
+{%      if ansible_system == "Darwin" %}
 transport         = local
+{%      endif %}
 
-# [ssh_connection]
-# ssh_args                    = -F ssh/ssh.cfg
+[ssh_connection]
+ssh_args          = -F ssh.cfg
 
 # Replace the above if you want to use a jumpbox
 #
-#ssh_args                    = -F ssh/ssh-jumpbox.cfg
+#ssh_args                    = -F utilities/ssh-jumpbox.cfg
 

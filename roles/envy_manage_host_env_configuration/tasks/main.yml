@@ -13,6 +13,7 @@
   template:
     src:      lab_inventory.j2
     dest:     "env-{{ env_name }}/inventory"
+    mode:     0755
 
 - name: Copy vagrant key to lab/ssh
   copy:
@@ -24,5 +25,6 @@
   template:
     src:     "{{ item.file }}.j2"
     dest:    "env-{{ env_name }}/{{ item.directory }}/{{ item.file }}"
+    mode:     0755
   loop:     "{{ env_files }}"
-...
+
