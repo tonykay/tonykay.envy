@@ -70,6 +70,7 @@
     - name: Create individual env instances
       community.docker.docker_container:
         name:             "{{ __env_container.name }}"
+        hostname:         "{{ __container.hostname            | default( __env_container.name) }}"
         image:            "{{ __env_container.image           | default(env_default_image) }}"
         privileged:       "{{ __env_container.privileged      | default(true) }}"
         published_ports:  "{{ __env_container.published_ports | default([]) }}"
