@@ -1,0 +1,13 @@
+{{ ansible_managed | comment }}
+
+{% for item in groups | sort if item != "docker_control" %}
+
+[{{ item }}]
+{%   for entry in groups[item] | sort if entry != "docker_host" %}
+{%      if ansible_system == "Darwin" %}
+{{ entry }} ansible_host={{ hostvars[entry].mac_ansible_ssh_host }} ansible_ssh_port={{ hostvars[entry].ansible_ssh_port }}
+{%      elif ansible_system == "linux" %}
+{{ entry }} ansible_host={{ hostvars[entry].linux_ansible_ssh_host }} ansible_ssh_port={{ hostvars[entry].ansible_ssh_port }}
+{%      endif %}
+{%   endfor %}
+{% endfor %}

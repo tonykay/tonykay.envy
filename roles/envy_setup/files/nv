@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "Hello from nv"
+
+ansible-playbook /Users/tok/.ansible/collections/ansible_collections/tonykay/envy/playbooks/${1}.yml #$@

@@ -1,0 +1,20 @@
+{% for instance in env_instances %}
+
+Host {{ instance.name }} 
+{%      if ansible_system == "Darwin" %}
+  Hostname {{ hostvars[instance.name].mac_ansible_ssh_host }}
+  Port {{ hostvars[instance.name]['ansible_ssh_port'] }}
+{%      elif ansible_system == "linux" %}
+  Hostname {{ hostvars[instance.name].linux_ansible_ssh_host }}
+{%      endif %}
+  ControlPath /tmp/{{ instance.name }}-%h-%r
+
+{% endfor %}
+
+Host *
+  User vagrant
+  IdentityFile  ~/.ssh/vagrant.pem
+  ControlMaster auto
+  ControlPath /tmp/%h-%p-%r
+  ControlPersist 5m
+  StrictHostKeyChecking no

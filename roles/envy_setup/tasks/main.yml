@@ -1,0 +1,19 @@
+---
+
+- name: Placeholder - include platform specfic runtime setups
+  debug:
+    msg:
+      - "For macOS i.e Darwin sewtup docker and toolchain"
+      - "For Red Hat based Linux setup docker and toolchain"
+      - "TODO: For Red Hat based Linix setup podman and toolchain"
+
+- name: "Install nv command to {{ envy_setup_nv_command_home }}"
+  file:
+    src:      nv
+    path:     "{{ envy_setup_nv_command_home | default('/usr/local/bin') }}"
+    state:   present 
+    mode:     0555
+
+    #- name: "Placeholder - git clone ansible
+
+...
