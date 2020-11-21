@@ -5,8 +5,8 @@ env_files:
     directory:    ""
   - file:         ssh.cfg
     directory:    ssh
-  - file:         ssh-jumpbox.cfg
-    directory:    ssh
+#  - file:         ssh-jumpbox.cfg
+#    directory:    ssh
   - file:         docker_aliases.env
     directory:    utilities
 

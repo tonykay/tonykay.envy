@@ -3,7 +3,6 @@
   hosts: localhost
   connection: local
   gather_facts: true
-  #become: true
   vars:
 
     env_name:                   default
@@ -32,18 +31,18 @@
           - '5432'
 
       - name: app
-        group: apps 
+        group: apps
         # image: rhel7-ssh
         networks:
           - name: "{{ env_default_domain }}"
-          - name: internal.com 
+          - name: internal.com
         published_ports:
           - '22'
           - '5432'
           - '8081:8080'
 
       - name: appdb
-        group: appdbs 
+        group: appdbs
         published_ports:
           - '22'
 
@@ -55,14 +54,14 @@
           - "Insert repo login code here"
           - "dockerhub - add support for other"
 
-    - name: Create network(s) 
+    - name: Create network(s)
       community.docker.docker_network:
         name: "{{ __network.name }}"
         labels: "{{ env_labels }}"
       loop: "{{ env_networks }}"
       loop_control:
         loop_var: __network
-      become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"  
+      become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
       tags:
         - network
         - networking
@@ -105,8 +104,9 @@
 
     - name: Debug output register r_container_info as json file
       copy:
-        content: "{{ r_container_info | to_nice_json }}"
-        dest:    "/tmp/container-{{ env_name }}-info.json"
+        content:  "{{ r_container_info | to_nice_json }}"
+        dest:     "/tmp/container-{{ env_name }}-info.json"
+        mode:     "064"
       tags:
         - inventory
 
@@ -127,7 +127,7 @@
 
     - name: Create env directory structure and files
       import_role:
-        name: envy_manage_host_env_configuration
+        name: tonykay.envy.envy_manage_host_env_configuration
       tags:
         - host-config
 

@@ -12,7 +12,7 @@
     vmlet_image:         rhel8-ssh
 
     networks:
-      - n  
+      - n
     env_labels:
       created_by:           envy
       guid:                 "{{ env | default('000000') }}"
@@ -20,23 +20,23 @@
     lab_machines:
 
       - name: control1
-        group: bastions 
+        group: bastions
         published_ports:
           - 22
-          - 8080:82  
+          - 8080:82
           - 5432
 
           #ip: 172.4.26.2
         ssh_port_map: "2222:22"
 
       - name: node21
-        group: appdbs 
+        group: appdbs
         #ip: 172.4.26.6
         ssh_port_map: "2227:22"
         exposed_port_map: "8081:80"
 
       - name: node31
-        group: appdbs 
+        group: appdbs
           #        ip: 172.4.26.6
         ssh_port_map: "22"
 #        exposed_port_map: "8081:80"

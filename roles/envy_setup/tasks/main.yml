@@ -11,7 +11,7 @@
   file:
     src:      nv
     path:     "{{ envy_setup_nv_command_home | default('/usr/local/bin') }}"
-    state:   present 
+    state:   present
     mode:     0555
 
     #- name: "Placeholder - git clone ansible
