@@ -1,6 +1,11 @@
 ---
 
-env_files:
+envy_directories:
+    - "env-{{ env_name }}"
+    - "env-{{ env_name }}/ssh"
+    - "env-{{ env_name }}/utilities"
+
+envy_files:
   - file:         ansible.cfg
     directory:    ""
   - file:         ssh.cfg

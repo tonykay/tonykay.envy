@@ -1,13 +1,13 @@
 ---
+
 - name: Create env directory structure
   file:
-    path:     "{{ item }}"
+    path:     "{{ env_home_directory | default('~') }}/{{ __directory }}"
     state:    directory
     mode:     0755
-  loop:
-    - "env-{{ env_name }}"
-    - "env-{{ env_name }}/ssh"
-    - "env-{{ env_name }}/utilities"
+  loop: "{{ envy_directories }}"
+  loop_control:
+    loop_var: __directory
 
 - name: Generate lab static inventory file
   template:
@@ -23,8 +23,11 @@
 
 - name: Write ansible lab config files
   template:
-    src:     "{{ item.file }}.j2"
-    dest:    "env-{{ env_name }}/{{ item.directory }}/{{ item.file }}"
+    src:     "{{ __files.file }}.j2"
+    dest:    "env-{{ env_name }}/{{ __files.directory }}/{{ __files.file }}"
     mode:     0755
-  loop:     "{{ env_files }}"
+  loop:     "{{ envy_files }}"
+  loop_control:
+    loop_var: __files
 
+...
