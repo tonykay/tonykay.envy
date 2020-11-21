@@ -30,4 +30,9 @@
   loop_control:
     loop_var: __files
 
+- name: Create user ssh Include cofig file
+  template:
+    src:     ssh.cfg.j2
+    dest:    ~/.ssh/envy-config
+    mode:     0755
 ...
