@@ -15,10 +15,10 @@
     dest:     "env-{{ env_name }}/inventory"
     mode:     0755
 
-- name: Copy vagrant key to lab/ssh
+- name: Copy ssh key to lab/ssh default to vagrant
   copy:
-    src:      vagrant.private
-    dest:     "env-{{ env_name }}/ssh/vagrant.private"
+    src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
+    dest:     "env-{{ env_name }}/ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
     mode:     0400
 
 - name: Write ansible lab config files
