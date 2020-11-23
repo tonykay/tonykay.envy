@@ -17,11 +17,11 @@
       - name:                   "{{ envy_default_domain }}"
       - name:                   internal.com
 
-    env_labels:
+    envy_labels:
       created_by:               envy
       guid:                     "{{ env | default('000000') }}"
 
-    env_instances:
+    envy_instances:
 
       - name: control
         group: control_node
@@ -57,7 +57,7 @@
     - name: Create network(s)
       community.docker.docker_network:
         name: "{{ __network.name }}"
-        labels: "{{ env_labels }}"
+        labels: "{{ envy_labels }}"
       loop: "{{ envy_networks }}"
       loop_control:
         loop_var: __network
@@ -74,11 +74,11 @@
         privileged:       "{{ __env_container.privileged      | default(true) }}"
         published_ports:  "{{ __env_container.published_ports | default([]) }}"
         networks:         "{{ __env_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
-        labels:           "{{ env_labels }}"
+        labels:           "{{ envy_labels }}"
         env:
           SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
-          SSH_USER:         vagrant
-      loop: "{{ env_instances }}"
+          SSH_USER:         "{{ envy_ansible_ssh_user | default('vagrant') }}"
+      loop: "{{ envy_instances }}"
       loop_control:
         loop_var: __env_container
         label: "{{ __env_container.name }}"
