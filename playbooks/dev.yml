@@ -3,7 +3,6 @@
   hosts: localhost
   connection: local
   gather_facts: true
-#  become: true
   vars:
 
     env_name:                   default
@@ -82,6 +81,7 @@
       loop: "{{ env_instances }}"
       loop_control:
         loop_var: __env_container
+        label: "{{ __env_container.name }}"
       become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
       tags:
         - instances
@@ -100,6 +100,7 @@
       loop: "{{ r_container_info.results }}"
       loop_control:
         loop_var: __container
+        label: "{{ __container.__env_container.name }}"
       tags:
         - inventory
 
