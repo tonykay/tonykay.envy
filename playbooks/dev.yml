@@ -3,6 +3,7 @@
   hosts: localhost
   connection: local
   gather_facts: true
+#  become: true
   vars:
 
     env_name:                   default
@@ -106,7 +107,7 @@
       copy:
         content:  "{{ r_container_info | to_nice_json }}"
         dest:     "/tmp/container-{{ env_name }}-info.json"
-        mode:     "064"
+        mode:     "0644"
       tags:
         - inventory
 

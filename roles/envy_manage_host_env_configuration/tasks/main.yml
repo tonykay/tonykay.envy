@@ -9,16 +9,31 @@
   loop_control:
     loop_var: __directory
 
-- name: Generate lab static inventory file
-  template:
-    src:      lab_inventory.j2
-    dest:     "env-{{ env_name }}/inventory"
-    mode:     0755
+# - name: Generate lab static inventory file
+#   template:
+#     src:      lab_inventory.j2
+#     dest:     "env-{{ env_name }}/inventory"
+#     mode:     0755
+
+- name: Ensure user ssh config files exists
+  lineinfile:
+    path: ~/.ssh/config
+    create: true
+    state: present
+    mode: "0644"
+    line: "Include envy-config"
+
 
 - name: Copy ssh key to lab/ssh default to vagrant
   copy:
     src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
     dest:     "env-{{ env_name }}/ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
+    mode:     0400
+
+- name: Copy ssh key to lab/ssh default to vagrant
+  copy:
+    src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
+    dest:     "~/.ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
     mode:     0400
 
 - name: Write ansible lab config files
@@ -30,7 +45,8 @@
   loop_control:
     loop_var: __files
 
-- name: Create user ssh Include cofig file
+- name: Create user ssh Include config file
+#  when: ansible_system != "Linux"
   template:
     src:     ssh.cfg.j2
     dest:    ~/.ssh/envy-config

@@ -4,7 +4,7 @@ Host {{ instance.name }}
 {%      if ansible_system == "Darwin" %}
   Hostname {{ hostvars[instance.name].mac_ansible_ssh_host }}
   Port {{ hostvars[instance.name]['ansible_ssh_port'] }}
-{%      elif ansible_system == "linux" %}
+{%      elif ansible_system == "Linux" %}
   Hostname {{ hostvars[instance.name].linux_ansible_ssh_host }}
 {%      endif %}
   ControlPath /tmp/{{ instance.name }}-%h-%r
