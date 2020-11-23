@@ -1,19 +1,19 @@
 ---
 
-- name: Create env directory structure
+- name: Create env directory structure for Ansible files (optional)
   file:
-    path:     "{{ env_home_directory | default('~') }}/{{ __directory }}"
+    path:     "{{ __directory }}"
     state:    directory
     mode:     0755
   loop: "{{ envy_directories }}"
   loop_control:
     loop_var: __directory
 
-# - name: Generate lab static inventory file
-#   template:
-#     src:      lab_inventory.j2
-#     dest:     "env-{{ env_name }}/inventory"
-#     mode:     0755
+- name: Generate lab static inventory file
+  template:
+    src:      lab_inventory.j2
+    dest:     "{{ envy_home_directory }}/inventory"
+    mode:     0755
 
 - name: Ensure user ssh config files exists
   lineinfile:
@@ -23,14 +23,14 @@
     mode: "0644"
     line: "Include envy-config"
 
+#- name: Copy ssh key to lab/ssh default to vagrant
+#  copy:
+#    src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
+#    dest:     "env-{{ env_name }}/ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
+#    dest:     "{{ envy_home_directory }}/{{ env_ssh_private_key | default('vagrant.private') }}"
+#    mode:     0400
 
-- name: Copy ssh key to lab/ssh default to vagrant
-  copy:
-    src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
-    dest:     "env-{{ env_name }}/ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
-    mode:     0400
-
-- name: Copy ssh key to lab/ssh default to vagrant
+- name: "Copy ssh key to user .ssh  default to vagrant"
   copy:
     src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
     dest:     "~/.ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
@@ -39,9 +39,9 @@
 - name: Write ansible lab config files
   template:
     src:     "{{ __files.file }}.j2"
-    dest:    "env-{{ env_name }}/{{ __files.directory }}/{{ __files.file }}"
-    mode:     0755
-  loop:     "{{ envy_files }}"
+    dest:    "{{ envy_home_directory }}//{{ __files.file }}"
+    mode:    "0644"
+  loop:     "{{ envy_ansible_files }}"
   loop_control:
     loop_var: __files
 
@@ -50,5 +50,5 @@
   template:
     src:     ssh.cfg.j2
     dest:    ~/.ssh/envy-config
-    mode:     0755
+    mode:    "0644"
 ...

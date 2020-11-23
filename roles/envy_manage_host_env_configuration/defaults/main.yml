@@ -1,15 +1,20 @@
 ---
 
-envy_directories:
-    - "env-{{ env_name }}"
-    - "env-{{ env_name }}/ssh"
-    - "env-{{ env_name }}/utilities"
+envy_home_location: "~"
+envy_home_directory: "{{ envy_home_location }}/env-{{ env_name }}"
 
-envy_files:
+envy_directories:
+    - "{{ envy_home_directory }}"
+    - "{{ envy_home_directory }}/utilities"
+    # - "env-{{ env_name }}/utilities"
+    #    - "env-{{ env_name }}/ssh"
+
+envy_ansible_files:
   - file:         ansible.cfg
     directory:    ""
   - file:         ssh.cfg
-    directory:    ssh
+    directory:    ""
+    #    directory:    ssh
   - file:         docker_aliases.env
     directory:    utilities
 #  - file:         ssh-jumpbox.cfg
