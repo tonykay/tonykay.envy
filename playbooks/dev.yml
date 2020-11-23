@@ -5,16 +5,16 @@
   gather_facts: true
   vars:
 
-    env_name:                   default
-    env_default_domain:         example.com
-    # env_default_image:          rhel8-ssh
-    env_default_image:          tonykay/centos-systemd-ssh
-    env_ansible_ssh_user:       vagrant
+    envy_name:                   default
+    envy_default_domain:         example.com
+    # envy_default_image:          rhel8-ssh
+    envy_default_image:          tonykay/centos-systemd-ssh
+    envy_ansible_ssh_user:       vagrant
 
-    env_ansible_ssh_private_key_file: ~/.ssh/vagrant.pem
+    envy_ansible_ssh_private_key_file: ~/.ssh/vagrant.pem
 
-    env_networks:
-      - name:                   "{{ env_default_domain }}"
+    envy_networks:
+      - name:                   "{{ envy_default_domain }}"
       - name:                   internal.com
 
     env_labels:
@@ -34,7 +34,7 @@
         group: apps
         # image: rhel7-ssh
         networks:
-          - name: "{{ env_default_domain }}"
+          - name: "{{ envy_default_domain }}"
           - name: internal.com
         published_ports:
           - '22'
@@ -58,7 +58,7 @@
       community.docker.docker_network:
         name: "{{ __network.name }}"
         labels: "{{ env_labels }}"
-      loop: "{{ env_networks }}"
+      loop: "{{ envy_networks }}"
       loop_control:
         loop_var: __network
       become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
@@ -70,10 +70,10 @@
       community.docker.docker_container:
         name:             "{{ __env_container.name }}"
         hostname:         "{{ __container.hostname            | default( __env_container.name) }}"
-        image:            "{{ __env_container.image           | default(env_default_image) }}"
+        image:            "{{ __env_container.image           | default(envy_default_image) }}"
         privileged:       "{{ __env_container.privileged      | default(true) }}"
         published_ports:  "{{ __env_container.published_ports | default([]) }}"
-        networks:         "{{ __env_container.networks        | default([{ 'name': env_networks[0].name}]) }}"
+        networks:         "{{ __env_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
         labels:           "{{ env_labels }}"
         env:
           SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
@@ -95,7 +95,7 @@
         msg:
           - "name is {{ __container.__env_container.name }}"
           - "group is {{ __container.__env_container.group }}"
-          - "IP is {{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+          - "IP is {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
           - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
@@ -107,7 +107,7 @@
     - name: Debug output register r_container_info as json file
       copy:
         content:  "{{ r_container_info | to_nice_json }}"
-        dest:     "/tmp/container-{{ env_name }}-info.json"
+        dest:     "/tmp/container-{{ envy_name }}-info.json"
         mode:     "0644"
       tags:
         - inventory
@@ -117,7 +117,7 @@
         name:             "{{ __container.__env_container.name }}"
         shortname:        "{{ __container.__env_container.name }}"
         mac_ansible_ssh_host: localhost
-        linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[env_networks[0].name].IPAddress }}"
+        linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
         group:            "{{ __container.__env_container.group }}"
         ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"

@@ -1,13 +1,13 @@
 ---
 
 envy_home_location: "~"
-envy_home_directory: "{{ envy_home_location }}/env-{{ env_name }}"
+envy_home_directory: "{{ envy_home_location }}/env-{{ envy_name }}"
 
 envy_directories:
     - "{{ envy_home_directory }}"
     - "{{ envy_home_directory }}/utilities"
-    # - "env-{{ env_name }}/utilities"
-    #    - "env-{{ env_name }}/ssh"
+    # - "env-{{ envy_name }}/utilities"
+    #    - "env-{{ envy_name }}/ssh"
 
 envy_ansible_files:
   - file:         ansible.cfg

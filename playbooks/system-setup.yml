@@ -54,7 +54,7 @@
     - name: Debug output register r_container_info as json file
       copy:
         content: "{{ r_container_info | to_nice_json }}"
-        dest:    "/tmp/container-{{ env_name }}-info.json"
+        dest:    "/tmp/container-{{ envy_name }}-info.json"
       tags:
         - inventory
 
