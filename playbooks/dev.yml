@@ -128,7 +128,7 @@
 
     - name: Create env directory structure and files
       import_role:
-        name: tonykay.envy.envy_manage_host_env_configuration
+        name: tonykay.envy.envy_manage_host_envy_configuration
       tags:
         - host-config
 

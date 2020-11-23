@@ -4,7 +4,7 @@
   file:
     path:     "{{ __directory }}"
     state:    directory
-    mode:     0755
+    mode:     "0755"
   loop: "{{ envy_directories }}"
   loop_control:
     loop_var: __directory
@@ -13,7 +13,7 @@
   template:
     src:      lab_inventory.j2
     dest:     "{{ envy_home_directory }}/inventory"
-    mode:     0755
+    mode:     "0644"
 
 - name: Ensure user ssh config files exists
   lineinfile:
