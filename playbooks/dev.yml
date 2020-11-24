@@ -5,21 +5,22 @@
   gather_facts: true
   vars:
 
-    envy_name:                   default
-    envy_default_domain:         example.com
+    envy_name:                    default
+    envy_default_domain:          example.com
     # envy_default_image:          rhel8-ssh
-    envy_default_image:          tonykay/centos-systemd-ssh
-    envy_ansible_ssh_user:       vagrant
+    envy_default_image:           tonykay/centos-systemd-ssh
+    envy_ssh_user:                vagrant
 
-    envy_ansible_ssh_private_key_file: ~/.ssh/vagrant.pem
+    envy_ssh_private_key_file:    ~/.ssh/vagrant.pem
+    envy_ssh_public_key_file:     ~/.ssh/vagrant.pem
 
     envy_networks:
-      - name:                   "{{ envy_default_domain }}"
-      - name:                   internal.com
+      - name:                     "{{ envy_default_domain }}"
+      - name:                     internal.com
 
     envy_labels:
-      created_by:               envy
-      guid:                     "{{ env | default('000000') }}"
+      created_by:                 envy
+      guid:                       "{{ env | default('000000') }}"
 
     envy_instances:
 
@@ -77,7 +78,7 @@
         labels:           "{{ envy_labels }}"
         env:
           SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
-          SSH_USER:         "{{ envy_ansible_ssh_user | default('vagrant') }}"
+          SSH_USER:         "{{ envy_ssh_user | default('vagrant') }}"
       loop: "{{ envy_instances }}"
       loop_control:
         loop_var: __env_container

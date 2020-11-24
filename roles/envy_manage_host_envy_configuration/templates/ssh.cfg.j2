@@ -7,14 +7,14 @@ Host {{ instance.name }}
 {%      elif ansible_system == "Linux" %}
   Hostname {{ hostvars[instance.name].linux_ansible_ssh_host }}
 {%      endif %}
-  ControlPath /tmp/{{ instance.name }}-%h-%r
-
-{% endfor %}
-
-Host *
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
   User vagrant
   IdentityFile  ~/.ssh/vagrant.pem
+  LogLevel QUIET
   ControlMaster auto
   ControlPath /tmp/%h-%p-%r
   ControlPersist 5m
-  StrictHostKeyChecking no
+
+{% endfor %}
+
