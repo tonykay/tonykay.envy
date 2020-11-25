@@ -57,8 +57,9 @@
 
     - name: Create network(s)
       community.docker.docker_network:
-        name: "{{ __network.name }}"
-        labels: "{{ envy_labels }}"
+        name:             "{{ __network.name }}"
+        state:            present
+        labels:           "{{ envy_labels }}"
       loop: "{{ envy_networks }}"
       loop_control:
         loop_var: __network
@@ -70,6 +71,7 @@
     - name: Create individual env instances
       community.docker.docker_container:
         name:             "{{ __env_container.name }}"
+        state:            present
         hostname:         "{{ __container.hostname            | default( __env_container.name) }}"
         image:            "{{ __env_container.image           | default(envy_default_image) }}"
         privileged:       "{{ __env_container.privileged      | default(true) }}"
