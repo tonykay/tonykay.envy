@@ -15,10 +15,13 @@ tags:
   - containers
   - docker
 
-dependencies:
-  docker.community: "*"
+dependencies: {}
+#  docker.community: "*"
 
 repository: https://github.com/tonykay/tonykay.envy
 documentation: http://docs.example.com
 homepage: http://example.com
 issues: https://github.com/tonykay/tonykay.envy/issues
+build_ignore:
+  - .DS_Store
+  - "*.tar.gz"
