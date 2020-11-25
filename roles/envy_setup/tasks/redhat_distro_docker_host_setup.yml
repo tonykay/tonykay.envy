@@ -1,0 +1,25 @@
+---
+
+- name: Install Docker via cli    # Certain options in dnf module not yet supported
+  block:
+
+    - name: Enable docker-ce repo via command
+      command: "dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo"
+      changed_when: false
+
+    - name: Enable docker-ce repo via command
+      command: "dnf install -y --allowerasing --nobest docker-ce"
+      changed_when: false
+
+- name: Set sticky bit on Docker if required for nv
+  file:
+    path: /usr/bin/docker
+    mode: u+s
+
+- name: Start and enable Docker
+  service:
+    name: docker
+    enabled: true
+    state: started
+
+...
