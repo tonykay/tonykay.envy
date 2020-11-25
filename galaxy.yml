@@ -16,7 +16,7 @@ tags:
   - docker
 
 dependencies:
-  - docker.community: "*"
+  docker.community: "*"
 
 repository: https://github.com/tonykay/tonykay.envy
 documentation: http://docs.example.com
