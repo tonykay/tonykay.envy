@@ -30,36 +30,40 @@
 
 #- name: Copy ssh key to lab/ssh default to vagrant
 #  copy:
-#    src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
-#    dest:     "env-{{ envy_name }}/ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
-#    dest:     "{{ envy_home_directory }}/{{ env_ssh_private_key | default('vagrant.private') }}"
+#    src:      "{{ env_ssh_private_key | default('vagrant.pem') }}"
+#    dest:     "env-{{ envy_name }}/ssh/{{ env_ssh_private_key | default('vagrant.pem') }}"
+#    dest:     "{{ envy_home_directory }}/{{ env_ssh_private_key | default('vagrant.pem') }}"
 #    mode:     0400
 
 #    
 # SSH Config 
 #    
 
-- name: Create user ssh Include config file
-  template:
-    src:     ssh.cfg.j2
-    dest:    "~/.ssh/envy-{{ envy_name }}-config"
-    mode:    "0644"
+- name: "Setup the local {{ envy_local_user }} SSH configuration"
+  block:
 
-- name: Ensure user ssh config files exists and add Include
-  lineinfile:
-    path: ~/.ssh/config
-    create: true
-    state: present
-    mode: "0644"
-    line: "Include envy-{{ envy_name }}-config"
-    insertbefore: BOF
+    - name: Create user SSH Include config file
+      template:
+        src:     ssh.cfg.j2
+        dest:    "~/.ssh/envy-{{ envy_name }}-config"
+        mode:    "0644"
 
-- name: "Copy ssh key to user .ssh  default to vagrant"
-  copy:
-    src:      "{{ env_ssh_private_key | default('vagrant.private') }}"
-    dest:     "~/.ssh/{{ env_ssh_private_key | default('vagrant.private') }}"
-    mode:     0400
+    - name: Ensure user SSH config files exists and add Include
+      lineinfile:
+        path: ~/.ssh/config
+        create: true
+        state: present
+        mode: "0644"
+        line: "Include envy-{{ envy_name }}-config"
+        insertbefore: BOF
 
+    - name: "Copy SSH key to {{ envy_local_user }} .ssh default to vagrant"
+      copy:
+        src:      "{{ env_ssh_private_key | default('vagrant.pem') }}"
+        dest:     "~/.ssh/{{ env_ssh_private_key | default('vagrant.pem') }}"
+        mode:     0400
+
+  become_user: "{{ envy_local_user }}"
 
 #
 # Setup /etc/hosts

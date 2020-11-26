@@ -6,6 +6,7 @@
   vars:
 
     envy_name:                    default
+    envy_local_user:              "{{ lookup('env', 'USER') }}"
     envy_default_domain:          example.com
     # envy_default_image:          rhel8-ssh
     envy_default_image:           tonykay/centos-systemd-ssh
