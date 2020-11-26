@@ -1,16 +1,16 @@
 {% for instance in envy_instances %}
 
-Host {{ instance.name }} 
+Host {{ instance.name }} {{ instance.name }}.{{ envy_default_domain }}
 {%      if ansible_system == "Darwin" %}
   Hostname {{ hostvars[instance.name].mac_ansible_ssh_host }}
   Port {{ hostvars[instance.name]['ansible_ssh_port'] }}
 {%      elif ansible_system == "Linux" %}
   Hostname {{ hostvars[instance.name].linux_ansible_ssh_host }}
 {%      endif %}
+  User {{ envy_ssh_user }}
+  IdentityFile  {{ envy_ssh_private_key_file }}
   UserKnownHostsFile /dev/null
   StrictHostKeyChecking no
-  User vagrant
-  IdentityFile  ~/.ssh/vagrant.pem
   LogLevel QUIET
   ControlMaster auto
   ControlPath /tmp/%h-%p-%r

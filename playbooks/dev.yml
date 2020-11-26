@@ -58,7 +58,7 @@
     - name: Create network(s)
       community.docker.docker_network:
         name:             "{{ __network.name }}"
-        state:            present
+        #        state:            present
         labels:           "{{ envy_labels }}"
       loop: "{{ envy_networks }}"
       loop_control:
@@ -71,7 +71,7 @@
     - name: Create individual env instances
       community.docker.docker_container:
         name:             "{{ __env_container.name }}"
-        state:            present
+        # state:            present
         hostname:         "{{ __container.hostname            | default( __env_container.name) }}"
         image:            "{{ __env_container.image           | default(envy_default_image) }}"
         privileged:       "{{ __env_container.privileged      | default(true) }}"
@@ -99,7 +99,7 @@
           - "name is {{ __container.__env_container.name }}"
           - "group is {{ __container.__env_container.group }}"
           - "IP is {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
-          - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
+          #        - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
         loop_var: __container
