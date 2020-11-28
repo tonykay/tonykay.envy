@@ -1,15 +1,50 @@
 ---
-- name: Create the individual lab hosts
-  docker_container:
-    name:               "{{ item.name }}"
-    image:              "{{ docker_image }}"
-    privileged:         yes
-    published_ports:    "{{ (( item.ssh_port_map | default()) + ( ',' + item.exposed_port_map | default())) | regex_replace(',$', '') }}"
-    networks:
-      - name:           "{{ docker_network }}"
-        ipv4_address:   "{{ item.ip }}"
+
+- name: Create individual env instances
+  community.docker.docker_container:
+    state:            "{{ envy_state                      | default('started') }}"
+    name:             "{{ __env_container.name }}"
+    hostname:         "{{ __container.hostname            | default( __env_container.name) }}"
+    image:            "{{ __env_container.image           | default(envy_default_image) }}"
+    privileged:       "{{ __env_container.privileged      | default(true) }}"
+    published_ports:  "{{ __env_container.published_ports | default([]) }}"
+    networks:         "{{ __env_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
+    labels:           "{{ envy_labels }}"
     env:
       SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
-      SSH_USER:         vagrant
-  loop:            "{{ lab_machines }}"
+      SSH_USER:         "{{ envy_ssh_user | default('vagrant') }}"
+  loop: "{{ envy_instances }}"
+  loop_control:
+    loop_var: __env_container
+    label: "{{ __env_container.name }}"
+  become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
+  tags:
+    - instances
+    - containers
+    - inventory
+  register: r_container_info
+
+- name: Debug output register r_container_info
+  debug:
+    verbosity: 2
+    msg:
+      - "name is {{ __container.__env_container.name }}"
+      - "group is {{ __container.__env_container.group }}"
+      - "IP is {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
+      #        - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
+  loop: "{{ r_container_info.results }}"
+  loop_control:
+    loop_var: __container
+    label: "{{ __container.__env_container.name }}"
+  tags:
+    - inventory
+
+- name: Debug output register r_container_info as json file
+  copy:
+    content:  "{{ r_container_info | to_nice_json }}"
+    dest:     "/tmp/container-{{ envy_name }}-info.json"
+    mode:     "0644"
+  tags:
+    - inventory
+
 ...

@@ -1,0 +1,15 @@
+---
+
+# install_dependencies: True
+
+yum_dependencies_python3:
+  - python3  
+  - python3-pip
+
+pip_dependencies:
+  - virtualenv
+  
+virtual_env_home: /opt/envy
+virtual_env_name: venv-envy
+
+...

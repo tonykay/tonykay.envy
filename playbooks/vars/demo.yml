@@ -1,27 +1,21 @@
 ---
 
-envy_name:                    multi
+envy_name:                    default
 envy_state:                   present
-
-envy_pre_run_message:         ""
-envy_post_run_message:        ""
-
 envy_local_user:              "{{ lookup('env', 'USER') }}"
-
+envy_default_domain:          example.com
 # envy_default_image:          rhel8-ssh
 envy_default_image:           tonykay/centos-systemd-ssh
-
 envy_ssh_user:                vagrant
+
 envy_ssh_private_key_file:    ~/.ssh/vagrant.pem
 envy_ssh_public_key_file:     ~/.ssh/vagrant.pem
 
-envy_default_domain:          example.com
 envy_networks:
   - name:                     "{{ envy_default_domain }}"
   - name:                     internal.com
 
 envy_labels:
-  env_name:                   multi
   created_by:                 envy
   guid:                       "{{ env | default('000000') }}"
 
@@ -30,37 +24,24 @@ envy_instances:
   - name: control
     group: control_node
     published_ports:
-      - "22"
-      - "81:80"
+      - '22'
+      - '8080:8080'
+      - '5432'
 
-  - name: frontend1
-    group: load_balancers
+  - name: app
+    group: apps
+    # image: rhel7-ssh
     networks:
       - name: "{{ envy_default_domain }}"
+      - name: internal.com
     published_ports:
       - '22'
-      - '80:80'
+      - '5432'
+      - '8081:8080'
 
-  - name: app1
-    group: app_servers
-    networks:
-      - name: "{{ envy_default_domain }}"
+  - name: appdb
+    group: appdbs
     published_ports:
       - '22'
-      - '8080'
-
-  - name: app2
-    group: app_servers
-    networks:
-      - name: "{{ envy_default_domain }}"
-    published_ports:
-      - "22"
-      - "8080"
-
-  - name: appdb1
-    group: database_servers
-    published_ports:
-      - "22"
-      - "5432"
 
 ...

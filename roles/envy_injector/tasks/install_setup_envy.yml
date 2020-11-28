@@ -1,0 +1,30 @@
+---
+
+- name: Copy requirements.yml to Envy host
+  copy:
+    src: requirements.yml
+    dest: /tmp/requirements.yml
+    mode: 0555
+
+- name: Install Envy and related collections
+  command: "/opt/envy/venv-envy/bin/ansible-galaxy install -r /tmp/requirements.yml --force"
+  become_user: "{{ envy_user }}"
+  changed_when: true
+  vars:
+    ansible_python_interpreter: /opt/envy/venv-envy/bin/python
+  tags:
+    - galaxy
+
+#- name: Setup script link to for solve_lab functionality
+#  file:
+#    src: /usr/local/bin/grade_lab
+#    dest: /usr/local/bin/solve_lab
+#    state: link
+#
+#- name: Setup script link to for reset_lab functionality
+#  file:
+#    src: /usr/local/bin/grade_lab
+#    dest: /usr/local/bin/reset_lab
+#    state: link
+
+...

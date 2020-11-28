@@ -2,4 +2,8 @@
 
 echo "Hello from nv"
 
-ansible-playbook /Users/tok/.ansible/collections/ansible_collections/tonykay/envy/playbooks/${1}.yml #$@
+echo Activate virtualenv
+
+source /opt/envy/venv-envy/bin/activate
+
+ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/${1}.yml #$@

@@ -1,0 +1,9 @@
+---
+
+- name: Create Envy virtualenv
+  import_tasks: create_virtualenv.yml
+
+- name: Install and setup Envy
+  import_tasks: install_setup_envy.yml
+
+...

@@ -1,0 +1,12 @@
+---
+
+- name: Inject Envy on host
+  hosts: all
+  become: true
+  gather_facts: true
+
+  roles:
+
+    - tonykay.envy.envy_injector
+
+...

@@ -11,7 +11,7 @@
       command: "dnf install -y --allowerasing --nobest docker-ce"
       changed_when: false
 
-- name: Set sticky bit on Docker if required for nv
+- name: Set sticky bit on Docker if required for nv cli
   file:
     path: /usr/bin/docker
     mode: u+s

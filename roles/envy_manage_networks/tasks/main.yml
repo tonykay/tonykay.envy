@@ -1,10 +1,16 @@
 ---
-- name: Create lab docker network {{ docker_network }} with options
-  docker_network:
-    name: "{{ docker_network }}"
-    driver_options:
-      com.docker.network.bridge.name: "{{ docker_bridge_name }}"
-    ipam_options:
-      subnet: "{{ docker_subnet }}"
-      gateway: "{{ docker_gateway }}"
+
+- name: Create network(s)
+  community.docker.docker_network:
+    name:             "{{ __network.name }}"
+    state:            "{{ envy_state                      | default('present') }}"
+    labels:           "{{ envy_labels }}"
+  loop: "{{ envy_networks }}"
+  loop_control:
+    loop_var: __network
+  become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
+  tags:
+    - network
+    - networking
+
 ...
