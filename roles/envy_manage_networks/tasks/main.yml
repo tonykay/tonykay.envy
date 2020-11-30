@@ -1,9 +1,9 @@
 ---
 
-- name: Create network(s)
+- name: Manage container network(s)
   community.docker.docker_network:
     name:             "{{ __network.name }}"
-    state:            "{{ envy_state                      | default('present') }}"
+    state:            "{{ envy_state | default('present') }}"
     labels:           "{{ envy_labels }}"
   loop: "{{ envy_networks }}"
   loop_control:
