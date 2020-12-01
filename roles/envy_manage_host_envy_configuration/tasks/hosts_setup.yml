@@ -13,6 +13,7 @@
   loop_control:
     loop_var: __container
     label: "{{ __container.__env_container.name }}"
+  become: true
   tags:
     - hosts
 
