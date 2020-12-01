@@ -4,10 +4,9 @@
   connection: local
   gather_facts: true
   vars_files:
-    - vars/multi.yml
+    - "vars/{{ envy }}/default.yml"
 
   tasks:
-
 
     - name: Destroy container infrastructure
       block:

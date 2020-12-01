@@ -3,17 +3,13 @@
   hosts: localhost
   connection: local
   gather_facts: true
-
   vars:
     envy_state: present
 
   vars_files:
-    #    - vars/default.yml
-    - vars/multi.yml
-
+    - "vars/{{ envy }}/default.yml"
 
   tasks:
-
 
     - name: Create individual env instances
       import_role:

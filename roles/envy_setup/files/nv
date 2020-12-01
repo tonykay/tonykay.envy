@@ -43,7 +43,12 @@ process_cmd_line
 setup_nv_parameters
 activate_virtualenv
 
-ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml 2> /tmp/warnings \
-  | tee /tmp/log | sed -n -e 's/.*ENVY_USER_OUTPUT//' -e 's/\"$//p'
+ansible-playbook \
+  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
+  -e "envy=${2}" # \
+  # -e @~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/"${ENVIRONMENT}"/defauts
+
+# 2> /tmp/warnings \
+#  | tee /tmp/log | sed -n -e 's/.*ENVY_USER_OUTPUT//' -e 's/\"$//p'
 
 
