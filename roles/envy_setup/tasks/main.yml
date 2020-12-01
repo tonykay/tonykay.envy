@@ -5,9 +5,9 @@
   include_tasks: redhat_distro_docker_host_setup.yml
 
 - name: "Install nv command to {{ envy_setup_nv_command_home }}"
-  file:
+  copy:
     src:      nv
-    path:     "{{ envy_setup_nv_command_home | default('/usr/local/bin') }}"
+    dest:     "{{ envy_setup_nv_command_home | default('/usr/local/bin') }}/nv"
     state:   present
     mode:     0555
 
