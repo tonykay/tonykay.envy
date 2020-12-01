@@ -8,7 +8,7 @@
   copy:
     src:      nv
     dest:     "{{ envy_setup_nv_command_home | default('/usr/local/bin') }}/nv"
-    state:   present
+    owner:    root
     mode:     0555
 
 ...
