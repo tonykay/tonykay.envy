@@ -1,9 +1,49 @@
 #!/bin/bash
 
-echo "Hello from nv"
+# Setup vars
 
-echo Activate virtualenv
+VIRTUALENV_HOME=/opt/envy/venv-envy
+NUM_ARGS=$#
+ACTION=$1
+OBJECT=$2
 
-source /opt/envy/venv-envy/bin/activate
+usage ()
+{
+  echo "USAGE: nv <action> <object> <extras>"
+  echo
+  echo "nv deploy environment         # Deploy an Environment"
+  echo "nv destroy environment        # Destroy an Environment"
+  echo "nv setup                      # Reconfigure nv"
+  return
+}
 
-ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/${1}.yml #$@
+process_cmd_line ()
+{
+  if [ $NUM_ARGS -eq 0 ]; 
+  then
+    usage
+    exit 2
+  fi
+}  
+
+setup_nv_parameters ()
+{
+  TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")        # For logfile identification
+}
+
+activate_virtualenv ()
+{
+  if [ -f "$VIRTUALENV_HOME"/bin/activate ];
+  then
+    source /opt/envy/venv-envy/bin/activate
+  fi
+}
+
+process_cmd_line
+setup_nv_parameters
+activate_virtualenv
+
+ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml 2> /tmp/warnings \
+  | tee /tmp/log | sed -n -e 's/.*ENVY_USER_OUTPUT//' -e 's/\"$//p'
+
+

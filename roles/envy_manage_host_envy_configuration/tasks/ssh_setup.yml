@@ -1,0 +1,53 @@
+---
+
+#- name: Copy ssh key to lab/ssh default to vagrant
+#  copy:
+#    src:      "{{ env_ssh_private_key | default('vagrant.pem') }}"
+#    dest:     "env-{{ envy_name }}/ssh/{{ env_ssh_private_key | default('vagrant.pem') }}"
+#    dest:     "{{ envy_home_directory }}/{{ env_ssh_private_key | default('vagrant.pem') }}"
+#    mode:     0400
+
+- name: "Setup the local {{ envy_local_user }} SSH configuration"
+  when: envy_state == 'present'
+  block:
+
+    - name: Create user SSH Include config file
+      template:
+        src:     ssh.cfg.j2
+        dest:    "~/.ssh/envy-{{ envy_name }}-config"
+        mode:    "0644"
+
+    - name: Ensure user SSH config files exists and add Include
+      lineinfile:
+        path: ~/.ssh/config
+        create: true
+        state: present
+        mode: "0644"
+        line: "Include envy-{{ envy_name }}-config"
+        insertbefore: BOF
+
+    - name: "Copy SSH key to {{ envy_local_user }} .ssh default to vagrant"
+      copy:
+        src:      "{{ env_ssh_private_key | default('vagrant.pem') }}"
+        dest:     "~/.ssh/{{ env_ssh_private_key | default('vagrant.pem') }}"
+        mode:     0400
+
+  become_user: "{{ envy_local_user }}"
+
+- name: "Remove the local {{ envy_local_user }} SSH configuration"
+  when: envy_state == 'absent'
+  block:
+
+    - name: Update user SSH config files exists and remove Envy Include
+      lineinfile:
+        path: ~/.ssh/config
+        state: "{{ envy_state }}"
+        line: "Include envy-{{ envy_name }}-config"
+
+    - name: Remove envy ansible directory structure and files
+      file:
+        path:     "~/.ssh/envy-{{ envy_name }}-config"
+        state:    "{{ envy_state }}"
+
+  become_user: "{{ envy_local_user }}"
+...

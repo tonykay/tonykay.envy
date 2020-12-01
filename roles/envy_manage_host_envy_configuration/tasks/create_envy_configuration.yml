@@ -1,0 +1,31 @@
+---
+
+- name: Create envy directory structure and files
+  when: envy_state == "present"
+  block:
+
+    - name: Create env directory structure for Ansible files (optional)
+      file:
+        path:     "{{ __directory }}"
+        state:    directory
+        mode:     "0755"
+      loop: "{{ envy_directories }}"
+      loop_control:
+        loop_var: __directory
+
+    - name: Generate lab static inventory file
+      template:
+        src:      lab_inventory.j2
+        dest:     "{{ envy_home_directory }}/inventory"
+        mode:     "0644"
+
+    - name: Write ansible lab config files
+      template:
+        src:     "{{ __files.file }}.j2"
+        dest:    "{{ envy_home_directory }}//{{ __files.file }}"
+        mode:    "0644"
+      loop:     "{{ envy_ansible_files }}"
+      loop_control:
+        loop_var: __files
+
+...

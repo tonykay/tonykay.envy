@@ -1,0 +1,8 @@
+---
+
+- name: Remove envy ansible directory structure and files
+  file:
+    path:     "{{ envy_directories[0] }}"
+    state:    "{{ envy_state }}"
+
+...

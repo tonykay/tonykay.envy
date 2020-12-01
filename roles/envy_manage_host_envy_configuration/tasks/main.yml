@@ -1,92 +1,18 @@
 ---
 
-#
-# Create user envy directory stucture
-#
+- name: Create the envy diretory and ansible configuration files
+  when: envy_state == "present"
+  include_tasks: create_envy_configuration.yml
 
-- name: Create env directory structure for Ansible files (optional)
-  file:
-    path:     "{{ __directory }}"
-    state:    directory
-    mode:     "0755"
-  loop: "{{ envy_directories }}"
-  loop_control:
-    loop_var: __directory
+- name: Remove the envy diretory and ansible configuration files
+  when: envy_state == "absent"
+  include_tasks: remove_envy_configuration.yml
 
-- name: Generate lab static inventory file
-  template:
-    src:      lab_inventory.j2
-    dest:     "{{ envy_home_directory }}/inventory"
-    mode:     "0644"
-
-- name: Write ansible lab config files
-  template:
-    src:     "{{ __files.file }}.j2"
-    dest:    "{{ envy_home_directory }}//{{ __files.file }}"
-    mode:    "0644"
-  loop:     "{{ envy_ansible_files }}"
-  loop_control:
-    loop_var: __files
-
-#- name: Copy ssh key to lab/ssh default to vagrant
-#  copy:
-#    src:      "{{ env_ssh_private_key | default('vagrant.pem') }}"
-#    dest:     "env-{{ envy_name }}/ssh/{{ env_ssh_private_key | default('vagrant.pem') }}"
-#    dest:     "{{ envy_home_directory }}/{{ env_ssh_private_key | default('vagrant.pem') }}"
-#    mode:     0400
-
-#    
-# SSH Config 
-#    
-
-- name: "Setup the local {{ envy_local_user }} SSH configuration"
-  block:
-
-    - name: Create user SSH Include config file
-      template:
-        src:     ssh.cfg.j2
-        dest:    "~/.ssh/envy-{{ envy_name }}-config"
-        mode:    "0644"
-
-    - name: Ensure user SSH config files exists and add Include
-      lineinfile:
-        path: ~/.ssh/config
-        create: true
-        state: present
-        mode: "0644"
-        line: "Include envy-{{ envy_name }}-config"
-        insertbefore: BOF
-
-    - name: "Copy SSH key to {{ envy_local_user }} .ssh default to vagrant"
-      copy:
-        src:      "{{ env_ssh_private_key | default('vagrant.pem') }}"
-        dest:     "~/.ssh/{{ env_ssh_private_key | default('vagrant.pem') }}"
-        mode:     0400
-
-  become_user: "{{ envy_local_user }}"
-
-#
-# Setup /etc/hosts
-#
-
-- name: Insert hosts into /etc/hosts
+- name: "Manage {{ envy_user }} ssh configuration"
+  include_tasks: ssh_setup.yml
+  
+- name: Manage /etc/hosts on container host systems
   when: ansible_system == "Linux"
-  lineinfile:
-    path: /etc/hosts
-    state: present
-    create: true
-    line: >-
-      {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}
-      {{ __container.__env_container.name }}
-      {{ __container.__env_container.name }}.{{ envy_default_domain }}
-  loop: "{{ r_container_info.results }}"
-  loop_control:
-    loop_var: __container
-    label: "{{ __container.__env_container.name }}"
-  tags:
-    - hosts
-
-
-
+  include_tasks: hosts_setup.yml
 
 ...

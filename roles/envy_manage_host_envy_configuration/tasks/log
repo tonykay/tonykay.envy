@@ -1,0 +1,77 @@
+
+PLAY [Create a container based ssh based lab environment - e.g. for Ansible] *********************************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [tonykay.envy.envy_manage_networks : Manage container network(s)] ***************************************************************************************************************************************************************
+ok: [localhost] => (item={'name': 'example.com'})
+ok: [localhost] => (item={'name': 'internal.com'})
+
+TASK [tonykay.envy.envy_manage_instances : Manage individual env instances] **********************************************************************************************************************************************************
+ok: [localhost] => (item=control)
+ok: [localhost] => (item=frontend1)
+ok: [localhost] => (item=app1)
+ok: [localhost] => (item=app2)
+ok: [localhost] => (item=appdb1)
+
+TASK [Debug output register r_container_info] ****************************************************************************************************************************************************************************************
+skipping: [localhost] => (item=control) 
+skipping: [localhost] => (item=frontend1) 
+skipping: [localhost] => (item=app1) 
+skipping: [localhost] => (item=app2) 
+skipping: [localhost] => (item=appdb1) 
+skipping: [localhost]
+
+TASK [Debug output register r_container_info as json file] ***************************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Generate in-memory inventory] **************************************************************************************************************************************************************************************************
+changed: [localhost] => (item=control)
+changed: [localhost] => (item=frontend1)
+changed: [localhost] => (item=app1)
+changed: [localhost] => (item=app2)
+changed: [localhost] => (item=appdb1)
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Create the envy diretory and ansible configuration files] *******************************************************************************************************************
+included: /Users/tok/.ansible/collections/ansible_collections/tonykay/envy/roles/envy_manage_host_envy_configuration/tasks/create_envy_configuration.yml for localhost
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Create env directory structure for Ansible files (optional)] ****************************************************************************************************************
+ok: [localhost] => (item=~/env-multi)
+ok: [localhost] => (item=~/env-multi/utilities)
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Generate lab static inventory file] *****************************************************************************************************************************************
+ok: [localhost]
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Write ansible lab config files] *********************************************************************************************************************************************
+ok: [localhost] => (item={'file': 'ansible.cfg', 'directory': ''})
+ok: [localhost] => (item={'file': 'ssh.cfg', 'directory': ''})
+ok: [localhost] => (item={'file': 'docker_aliases.env', 'directory': 'utilities'})
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Remove the envy diretory and ansible configuration files] *******************************************************************************************************************
+skipping: [localhost]
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Manage {{ envy_user }} ssh configuration] ***********************************************************************************************************************************
+included: /Users/tok/.ansible/collections/ansible_collections/tonykay/envy/roles/envy_manage_host_envy_configuration/tasks/ssh_setup.yml for localhost
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Create user SSH Include config file] ****************************************************************************************************************************************
+ok: [localhost]
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Ensure user SSH config files exists and add Include] ************************************************************************************************************************
+ok: [localhost]
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Copy SSH key to tok .ssh default to vagrant] ********************************************************************************************************************************
+ok: [localhost]
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Update user SSH config files exists and remove Envy Include] ****************************************************************************************************************
+skipping: [localhost]
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Remove envy ansible directory structure and files] **************************************************************************************************************************
+skipping: [localhost]
+
+TASK [tonykay.envy.envy_manage_host_envy_configuration : Manage /etc/hosts on container host systems] ********************************************************************************************************************************
+skipping: [localhost]
+
+PLAY RECAP ***************************************************************************************************************************************************************************************************************************
+localhost                  : ok=13   changed=1    unreachable=0    failed=0    skipped=5    rescued=0    ignored=0   
+
