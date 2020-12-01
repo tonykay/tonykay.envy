@@ -22,4 +22,9 @@
     enabled: true
     state: started
 
+- name: Install docker py dependency    
+  pip:
+    name: docker-py
+    state: present
+
 ...
