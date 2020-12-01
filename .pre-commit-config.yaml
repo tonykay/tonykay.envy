@@ -4,9 +4,9 @@
   hooks:
     - id: yamllint
 
-- repo: https://github.com/ansible/ansible-lint.git
-  sha: v4.3.7
-  hooks:
-  - id: ansible-lint
-    files: \.(yaml|yml)$
+#- repo: https://github.com/ansible/ansible-lint.git
+#  sha: v4.3.7
+#  hooks:
+#  - id: ansible-lint
+#    files: \.(yaml|yml)$
 ...

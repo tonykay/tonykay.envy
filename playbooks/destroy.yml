@@ -23,6 +23,14 @@
       vars:
         envy_state: absent
 
+    - name: Create env directory structure and files
+      import_role:
+        name: tonykay.envy.envy_manage_host_envy_configuration
+      vars:
+        envy_state: absent
+      tags:
+        - host-config
+        
 #    - name: Debug output register r_container_info
 #      debug:
 #        verbosity: 2
@@ -35,14 +43,6 @@
 #      loop_control:
 #        loop_var: __container
 #        label: "{{ __container.__env_container.name }}"
-#      tags:
-#        - inventory
-#
-#    - name: Debug output register r_container_info as json file
-#      copy:
-#        content:  "{{ r_container_info | to_nice_json }}"
-#        dest:     "/tmp/container-{{ envy_name }}-info.json"
-#        mode:     "0644"
 #      tags:
 #        - inventory
 #
@@ -61,10 +61,5 @@
 #      tags:
 #        - inventory
 #
-#    - name: Create env directory structure and files
-#      import_role:
-#        name: tonykay.envy.envy_manage_host_envy_configuration
-#      tags:
-#        - host-config
 #
 ...
