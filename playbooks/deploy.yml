@@ -67,6 +67,7 @@
         name: tonykay.envy.envy_manage_host_envy_configuration
       vars:
         envy_state: present  
+      become: true
       tags:
         - host-config
 
