@@ -39,6 +39,19 @@ activate_virtualenv ()
   fi
 }
 
+cmd_list ()
+{
+  docker ps | cut -c 21-42,83-102,150-170 | sed 's/IMAGE   /INSTANCE/'
+}
+
+cmd_add ()
+{
+
+ansible-playbook \
+  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
+  -e "envy=${2}" -e @${ENVY_PATH}/playbooks/vars/addons/"${3}".yml
+}
+
 process_cmd_line
 setup_nv_parameters
 activate_virtualenv

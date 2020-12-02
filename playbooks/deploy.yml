@@ -7,7 +7,7 @@
     envy_state: present
 
   vars_files:
-    - "vars/{{ envy }}/default.yml"
+    - "vars/{{ envy | default('multi') }}/default.yml"
 
   tasks:
 
@@ -23,44 +23,9 @@
       vars:
         envy_container_state: started
 
-
-    - name: Debug output register r_container_info
-      debug:
-        verbosity: 2
-        msg:
-          - "name is {{ __container.__envy_container.name }}"
-          - "group is {{ __container.__envy_container.group }}"
-          - "IP is {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
-          #        - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
-      loop: "{{ r_container_info.results }}"
-      loop_control:
-        loop_var: __container
-        label: "{{ __container.__envy_container.name }}"
-      tags:
-        - inventory
-
-    - name: Debug output register r_container_info as json file
-      copy:
-        content:  "{{ r_container_info | to_nice_json }}"
-        dest:     "/tmp/container-{{ envy_name }}-info.json"
-        mode:     "0644"
-      tags:
-        - inventory
-
     - name: Generate in-memory inventory
-      add_host:
-        name:             "{{ __container.__envy_container.name }}"
-        shortname:        "{{ __container.__envy_container.name }}"
-        mac_ansible_ssh_host: localhost
-        linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
-        group:            "{{ __container.__envy_container.group }}"
-        ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
-      loop: "{{ r_container_info.results }}"
-      loop_control:
-        label: "{{ __container.__envy_container.name }}"
-        loop_var: __container
-      tags:
-        - inventory
+      import_role:
+        name: tonykay.envy.envy_manage_inventory
 
     - name: Create env directory structure and files
       import_role:

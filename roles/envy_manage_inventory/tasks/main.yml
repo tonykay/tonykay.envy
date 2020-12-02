@@ -1,11 +1,18 @@
 ---
-- name: Create in-memory inventory
+
+- name: Generate in-memory inventory
   add_host:
-    name:               "{{ container.name }}"
-    groups:             "{{ container.group }}"
-    ansible_ssh_host:   "{{ container.ip }}"
-  loop:                 "{{ lab_machines }}"
+    name:             "{{ __container.__envy_container.name }}"
+    shortname:        "{{ __container.__envy_container.name }}"
+    mac_ansible_ssh_host: localhost
+    linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
+    group:            "{{ __container.__envy_container.group }}"
+    ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
+  loop: "{{ r_container_info.results }}"
   loop_control:
-    loop_var:           container
+    label: "{{ __container.__envy_container.name }}"
+    loop_var: __container
+  tags:
+    - inventory
 
 ...

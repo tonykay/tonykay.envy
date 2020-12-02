@@ -18,7 +18,7 @@
     env:
       SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
       SSH_USER:         "{{ envy_ssh_user | default('vagrant') }}"
-  loop: "{{ envy_instances }}"
+  loop: "{{ combined_instances | default(envy_instances) }}"
   loop_control:
     loop_var: __envy_container
     label: "{{ __envy_container.name }}"

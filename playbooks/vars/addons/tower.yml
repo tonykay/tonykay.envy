@@ -1,0 +1,12 @@
+---
+
+addon_instance:
+
+  - name: tower
+    group: tower
+    published_ports:
+      - "22"
+      - "443:443"
+
+combined_instances: "{{ envy_instances | union(addon_instance) }}"
+...

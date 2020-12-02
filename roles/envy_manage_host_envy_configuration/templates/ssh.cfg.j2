@@ -1,4 +1,4 @@
-{% for instance in envy_instances %}
+{% for instance in combined_instances | default(envy_instances) %}
 
 Host {{ instance.name }} {{ instance.name }}.{{ envy_default_domain }}
 {%      if ansible_system == "Darwin" %}
