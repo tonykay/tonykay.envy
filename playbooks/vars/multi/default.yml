@@ -12,8 +12,8 @@ envy_local_user:              "{{ lookup('env', 'USER') }}"
 envy_default_image:          vmlet-rhel8-ansible
 
 envy_ssh_user:                devops
-envy_ssh_private_key_file:    ~/.ssh//provision_key.pem
-envy_ssh_public_key_file:     ~/.ssh/provision_key.pub
+envy_ssh_private_key_file:    provision_key.pem
+envy_ssh_public_key_file:     provision_key.pub
 
 envy_default_domain:          example.com
 envy_networks:
