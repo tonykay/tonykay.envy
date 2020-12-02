@@ -28,8 +28,8 @@
 
     - name: "Copy SSH key to {{ envy_local_user }} .ssh default to vagrant"
       copy:
-        src:      "{{ envy_ssh_private_key | default('vagrant.pem') }}"
-        dest:     "~/.ssh/{{ envy_ssh_private_key | default('vagrant.pem') }}"
+        src:      "{{ envy_ssh_private_key }}" # | default('vagrant.pem') }}"
+        dest:     "~/.ssh/{{ envy_ssh_private_key }}" # | default('vagrant.pem') }}"
         mode:     0400
 
   become_user: "{{ envy_local_user }}"
