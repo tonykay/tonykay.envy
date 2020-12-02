@@ -28,14 +28,14 @@
       debug:
         verbosity: 2
         msg:
-          - "name is {{ __container.__env_container.name }}"
-          - "group is {{ __container.__env_container.group }}"
+          - "name is {{ __container.__envy_container.name }}"
+          - "group is {{ __container.__envy_container.group }}"
           - "IP is {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
           #        - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
         loop_var: __container
-        label: "{{ __container.__env_container.name }}"
+        label: "{{ __container.__envy_container.name }}"
       tags:
         - inventory
 
@@ -49,15 +49,15 @@
 
     - name: Generate in-memory inventory
       add_host:
-        name:             "{{ __container.__env_container.name }}"
-        shortname:        "{{ __container.__env_container.name }}"
+        name:             "{{ __container.__envy_container.name }}"
+        shortname:        "{{ __container.__envy_container.name }}"
         mac_ansible_ssh_host: localhost
         linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
-        group:            "{{ __container.__env_container.group }}"
+        group:            "{{ __container.__envy_container.group }}"
         ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
       loop: "{{ r_container_info.results }}"
       loop_control:
-        label: "{{ __container.__env_container.name }}"
+        label: "{{ __container.__envy_container.name }}"
         loop_var: __container
       tags:
         - inventory

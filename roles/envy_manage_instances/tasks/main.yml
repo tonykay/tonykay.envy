@@ -8,20 +8,20 @@
 - name: Manage individual env instances
   community.docker.docker_container:
     state:            "{{ envy_container_state            | default(envy_state) | default('started') }}"
-    name:             "{{ __env_container.name }}"
-    hostname:         "{{ __container.hostname            | default( __env_container.name) }}"
-    image:            "{{ __env_container.image           | default(envy_default_image) }}"
-    privileged:       "{{ __env_container.privileged      | default(true) }}"
-    published_ports:  "{{ __env_container.published_ports | default([]) }}"
-    networks:         "{{ __env_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
+    name:             "{{ __envy_container.name }}"
+    hostname:         "{{ __container.hostname            | default( __envy_container.name) }}"
+    image:            "{{ __envy_container.image           | default(envy_default_image) }}"
+    privileged:       "{{ __envy_container.privileged      | default(true) }}"
+    published_ports:  "{{ __envy_container.published_ports | default([]) }}"
+    networks:         "{{ __envy_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
     labels:           "{{ envy_labels }}"
     env:
       SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
       SSH_USER:         "{{ envy_ssh_user | default('vagrant') }}"
   loop: "{{ envy_instances }}"
   loop_control:
-    loop_var: __env_container
-    label: "{{ __env_container.name }}"
+    loop_var: __envy_container
+    label: "{{ __envy_container.name }}"
   become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
   tags:
     - instances
@@ -34,23 +34,23 @@
 #    msg: "{{ ENVY_USER_OUTPUT }} Created Instance {{ envy_instances.name }}"
 #  loop: "{{ envy_instances }}"
 
-    # msg: "{{ ENVY_USER_OUTPUT }} Created Instance {{ __env_container.name }}"
+    # msg: "{{ ENVY_USER_OUTPUT }} Created Instance {{ __envy_container.name }}"
 #  loop_control:
-#    loop_var: __env_container
-#    label: "{{ __env_container.name }}"
+#    loop_var: __envy_container
+#    label: "{{ __envy_container.name }}"
 
 #- name: Debug output register r_container_info
 #  debug:
 #    verbosity: 2
 #    msg:
-#      - "name is {{ __container.__env_container.name }}"
-#      - "group is {{ __container.__env_container.group }}"
+#      - "name is {{ __container.__envy_container.name }}"
+#      - "group is {{ __container.__envy_container.group }}"
 #      - "IP is {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
 #      #        - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
 #  loop: "{{ r_container_info.results }}"
 #  loop_control:
 #    loop_var: __container
-#    label: "{{ __container.__env_container.name }}"
+#    label: "{{ __container.__envy_container.name }}"
 #  tags:
 #    - inventory
 #

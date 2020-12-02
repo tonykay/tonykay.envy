@@ -7,12 +7,12 @@
     create: true
     line: >-
       {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}
-      {{ __container.__env_container.name }}
-      {{ __container.__env_container.name }}.{{ envy_default_domain }}
+      {{ __container.__envy_container.name }}
+      {{ __container.__envy_container.name }}.{{ envy_default_domain }}
   loop: "{{ r_container_info.results }}"
   loop_control:
     loop_var: __container
-    label: "{{ __container.__env_container.name }}"
+    label: "{{ __container.__envy_container.name }}"
   become: true
   tags:
     - hosts
