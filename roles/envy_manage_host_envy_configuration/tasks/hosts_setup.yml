@@ -1,14 +1,18 @@
 ---
 
-- name: Insert hosts into /etc/hosts
+- name: "Insert {{ envy_name }} hosts into /etc/hosts"
+  when: envy_state == 'present'
   lineinfile:
     path: /etc/hosts
     state: present
     create: true
     line: >-
-      {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}
-      {{ __container.__envy_container.name }}
-      {{ __container.__envy_container.name }}.{{ envy_default_domain }}
+      {{ 
+        __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress ~ ' '
+        ~ __container.__envy_container.name ~ ' '
+        ~ __container.__envy_container.name ~ '.' ~ envy_default_domain ~ '  # Part of env: '
+        ~ envy_name ~ '-config'
+      }}
   loop: "{{ r_container_info.results }}"
   loop_control:
     loop_var: __container
@@ -17,4 +21,15 @@
   tags:
     - hosts
 
+- name: "Remove {{ envy_name }} hosts from /etc/hosts"
+  when: envy_state == 'absent'
+  lineinfile:
+    path: /etc/hosts
+    state: absent
+    regexp: '{{ envy_name }}-config'
+
+#    line: >-
+#      {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}
+#      {{ __container.__envy_container.name }}
+#      {{ __container.__envy_container.name }}.{{ envy_default_domain }}
 ...
