@@ -27,6 +27,7 @@
     path: /etc/hosts
     state: absent
     regexp: '{{ envy_name }}-config'
+  become: true
 
 #    line: >-
 #      {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}
