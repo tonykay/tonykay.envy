@@ -41,7 +41,8 @@ activate_virtualenv ()
 
 cmd_list ()
 {
-  docker ps | cut -c 21-42,83-102,150-170 | sed 's/IMAGE   /INSTANCE/'
+  docker ps --format "table {{.Names}}\\t{{.Image}}\\t{{.Status}}" | sed 's/IMAGE   /INSTANCE/'
+
 }
 
 cmd_default ()

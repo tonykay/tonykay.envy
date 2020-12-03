@@ -30,6 +30,8 @@
 
       - name: control
         group: control_node
+        volumes:
+          - "~/shared_dir:/home/{{ envy_ssh_user }}"
         published_ports:
           - '22'
           - '8080:8080'
@@ -81,6 +83,7 @@
         privileged:       "{{ __env_container.privileged      | default(true) }}"
         published_ports:  "{{ __env_container.published_ports | default([]) }}"
         networks:         "{{ __env_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
+        volumes:          "{{ __env_container.volumes         | default(omit) }}"
         labels:           "{{ envy_labels }}"
         env:
           SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL

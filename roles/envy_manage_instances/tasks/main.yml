@@ -7,17 +7,18 @@
 
 - name: Manage individual env instances
   community.docker.docker_container:
-    state:            "{{ envy_container_state            | default(envy_state) | default('started') }}"
+    state:            "{{ envy_container_state             | default(envy_state) | default('started') }}"
     name:             "{{ __envy_container.name }}"
-    hostname:         "{{ __container.hostname            | default( __envy_container.name) }}"
+    hostname:         "{{ __container.hostname             | default( __envy_container.name) }}"
     image:            "{{ __envy_container.image           | default(envy_default_image) }}"
     privileged:       "{{ __envy_container.privileged      | default(true) }}"
     published_ports:  "{{ __envy_container.published_ports | default([]) }}"
     networks:         "{{ __envy_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
+    volumes:          "{{ __envy_container.volumes         | default(omit) }}"
     labels:           "{{ envy_labels }}"
     env:
       SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
-      SSH_USER:         "{{ envy_ssh_user | default('vagrant') }}"
+      SSH_USER:         "{{ envy_ssh_user | default('devops') }}"
   loop: "{{ combined_instances | default(envy_instances) }}"
   loop_control:
     loop_var: __envy_container

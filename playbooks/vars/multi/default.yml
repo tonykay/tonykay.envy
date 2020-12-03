@@ -29,6 +29,8 @@ envy_instances:
 
   - name: control
     group: control_node
+    volumes:
+      - "/Users/tok/shared_dir/:/mnt/foo/"
     published_ports:
       - "22"
       - "81:80"
