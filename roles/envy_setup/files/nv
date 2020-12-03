@@ -44,21 +44,36 @@ cmd_list ()
   docker ps | cut -c 21-42,83-102,150-170 | sed 's/IMAGE   /INSTANCE/'
 }
 
-cmd_add ()
+cmd_default ()
 {
 
 ansible-playbook \
   ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
-  -e "envy=${2}" -e @${ENVY_PATH}/playbooks/vars/addons/"${3}".yml
+  -e "envy=${2}" # -e @${ENVY_PATH}/playbooks/vars/addons/"${3}".yml
 }
 
 process_cmd_line
 setup_nv_parameters
 activate_virtualenv
 
-ansible-playbook \
-  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
-  -e "envy=${2}" # \
+# cd  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks
+
+case "$1" in
+  deploy | destroy | redeploy)
+    cmd_default $1 $2
+    ;;
+  list)
+    cmd_list
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+    exit 1
+     
+esac
+
+#ansible-playbook \
+#  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
+#  -e "envy=${2}" # \
   # -e @~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/"${ENVIRONMENT}"/defauts
 
 # 2> /tmp/warnings \
