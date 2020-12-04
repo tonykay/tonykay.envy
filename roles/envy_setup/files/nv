@@ -41,18 +41,26 @@ activate_virtualenv ()
 
 cmd_list ()
 {
+  echo
+  docker network list --format "table {{.Name}}" | egrep -v "^bridge$|^host$|^none$" | sed 's/^NAME$/DOMAINS/'
+  echo
   docker ps --format "table {{.Names}}\\t{{.Image}}\\t{{.Status}}" | sed 's/IMAGE   /INSTANCE/'
-
+  echo
 }
 
 cmd_default ()
 {
-
 ansible-playbook \
   ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
   -e "envy=${2}" # -e @${ENVY_PATH}/playbooks/vars/addons/"${3}".yml
 }
 
+cmd_add ()
+{
+ansible-playbook \
+  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
+  -e "envy=${2}" -e @~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/addons/"${3}".yml
+}
 process_cmd_line
 setup_nv_parameters
 activate_virtualenv
@@ -62,6 +70,9 @@ activate_virtualenv
 case "$1" in
   deploy | destroy | redeploy)
     cmd_default $1 $2
+    ;;
+  add)
+    cmd_add deploy $2 $3
     ;;
   list)
     cmd_list
