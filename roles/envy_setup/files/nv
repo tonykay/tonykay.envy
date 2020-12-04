@@ -67,10 +67,9 @@ cmd_setup ()
    ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/setup.yml
 }
 
-cmd_update ()
+cmd_update ()     # Update envy and other dependencies
 {
-   ansible-galaxy install -r ~/.ansible/collections/requirements.yml
-
+   ansible-galaxy install -r ~/.ansible/collections/requirements.yml --force-with-deps
 }  
 
 process_cmd_line
