@@ -61,6 +61,18 @@ ansible-playbook \
   ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/"${1}".yml \
   -e "envy=${2}" -e @~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/addons/"${3}".yml
 }
+
+cmd_setup ()
+{
+   ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/setup.yml
+}
+
+cmd_update ()
+{
+   ansible-galaxy install -r ~/.ansible/collections/requirements.yml
+
+}  
+
 process_cmd_line
 setup_nv_parameters
 activate_virtualenv
@@ -68,14 +80,20 @@ activate_virtualenv
 # cd  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks
 
 case "$1" in
-  deploy | destroy | redeploy)
-    cmd_default $1 $2
-    ;;
   add)
     cmd_add deploy $2 $3
     ;;
+  deploy | destroy | redeploy)
+    cmd_default $1 $2
+    ;;
   list)
     cmd_list
+    ;;
+  setup)
+    cmd_setup
+    ;;
+  update)
+    cmd_update
     ;;
   *)
     echo $"Usage: $0 {start|stop|restart|condrestart|status}"
