@@ -7,6 +7,7 @@ envy_pre_run_message:         ""
 envy_post_run_message:        ""
 
 envy_local_user:              "{{ lookup('env', 'USER') }}"
+envy_local_home:              "{{ lookup('env', 'HOME') }}"
 
 
 envy_default_image:          vmlet-rhel8-ansible
@@ -30,7 +31,7 @@ envy_instances:
   - name: control
     group: control_node
     volumes:
-      - "/Users/tok/shared_dir/:/mnt/foo/"
+      - "{{ envy_local_home }}/shared_dir/:/home/{{ envy_ssh_user }}/shared_dir:z,rw"
     published_ports:
       - "22"
       - "81:80"
