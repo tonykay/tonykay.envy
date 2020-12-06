@@ -72,13 +72,17 @@ cmd_update ()     # Update envy and other dependencies
    ansible-galaxy install -r ~/.ansible/collections/requirements.yml --force-with-deps
 }  
 
+cmd_login ()     # Update envy and other dependencies
+{
+  docker exec -it $1 bash
+}  
 process_cmd_line
 setup_nv_parameters
 activate_virtualenv
 
 # cd  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks
 
-case "$1" in
+case "$ACTION" in
   add)
     cmd_add deploy $2 $3
     ;;
@@ -87,6 +91,9 @@ case "$1" in
     ;;
   list)
     cmd_list
+    ;;
+  login)
+    cmd_login "$OBJECT"
     ;;
   setup)
     cmd_setup

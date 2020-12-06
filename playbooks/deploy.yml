@@ -9,6 +9,9 @@
   vars_files:
     - "vars/{{ envy | default('multi') }}/default.yml"
 
+#  vars:
+#    combined_instances: "{{ envy_instances | union(addon_instance | default([])) }}"
+
   tasks:
 
     - name: Create individual env instances

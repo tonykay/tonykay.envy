@@ -1,6 +1,6 @@
 ---
 
-ENVY_USER_OUTPUT: ENVY_USER_OUTPUT
+ENVY_USER_OUTPUT:             ENVY_USER_OUTPUT
 
 envy_name:                    multi
 envy_state:                   present
@@ -27,5 +27,7 @@ envy_labels:
   env_name:                   multi
   created_by:                 envy
   guid:                       "{{ env | default('000000') }}"
+
+combined_instances: "{{ envy_instances | union(addon_instance | default([])) }}"
 
 ...

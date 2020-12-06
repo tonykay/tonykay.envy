@@ -1,73 +1,34 @@
 ---
 
-envy_name:                    multi
-envy_state:                   present
+envy_name:                    sparse-multi
 
-envy_pre_run_message:         ""
-envy_post_run_message:        ""
-
-envy_local_user:              "{{ lookup('env', 'USER') }}"
-envy_local_home:              "{{ lookup('env', 'HOME') }}"
-
-
-envy_default_image:          vmlet-rhel8-ansible
-
-envy_ssh_user:                devops
-envy_ssh_private_key_file:    provision_key.pem
-envy_ssh_public_key_file:     provision_key.pub
-
-envy_default_domain:          example.com
 envy_networks:
-  - name:                     "{{ envy_default_domain }}"
-  - name:                     internal.com
+  - name:                     "{{ envy_default_domain | default('example.com') }}"
+    #  - name:                     internal.com
 
-envy_labels:
-  env_name:                   multi
-  created_by:                 envy
-  guid:                       "{{ env | default('000000') }}"
+    
+envy_default_image:           vmlet-rhel7-target
 
 envy_instances:
 
   - name: control
     group: control_node
+    image: vmlet-rhel8-ansible
     volumes:
       - "{{ envy_local_home }}/shared_dir/:/home/{{ envy_ssh_user }}/shared_dir:z,rw"
-    published_ports:
-      - "22"
-      - "81:80"
 
   - name: frontend1
     group: load_balancers
-    image: vmlet-rhel7-target
-    networks:
-      - name: "{{ envy_default_domain }}"
     published_ports:
-      - '22'
-      - '80:80'
+      - "80:80"
 
   - name: app1
     group: app_servers
-    image: vmlet-rhel7-target
-    networks:
-      - name: "{{ envy_default_domain }}"
-    published_ports:
-      - '22'
-      - '8080'
 
   - name: app2
     group: app_servers
-    image: vmlet-rhel7-target
-    networks:
-      - name: "{{ envy_default_domain }}"
-    published_ports:
-      - "22"
-      - "8080"
 
   - name: appdb1
     group: database_servers
-    image: vmlet-rhel7-target
-    published_ports:
-      - "22"
-      - "5432"
 
 ...
