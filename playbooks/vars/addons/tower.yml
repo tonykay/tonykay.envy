@@ -1,6 +1,6 @@
 ---
 
-addon_instance:
+addon_instances:
 
   - name: tower
     group: tower
@@ -8,5 +8,5 @@ addon_instance:
       - "22"
       - "443:443"
 
-combined_instances: "{{ envy_instances | union(addon_instance) }}"
+combined_instances: "{{ envy_instances | union(addon_instances) }}"
 ...

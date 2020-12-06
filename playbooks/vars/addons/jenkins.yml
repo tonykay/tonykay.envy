@@ -1,9 +1,9 @@
 ---
 
-envy_volumes:
-  - jenkins
+envy_addon_volumes:
+  - name: jenkins
 
-addon_instance:
+addon_instances:
 
   - name: jenkins
     group: jenkins
@@ -14,6 +14,6 @@ addon_instance:
     volumes:
       - "jenkins:/var/jenkins_home"
 
-        #combined_instances: "{{ envy_instances | union(addon_instance) }}"
+        #combined_instances: "{{ envy_instances | union(addon_instances) }}"
 
 ...

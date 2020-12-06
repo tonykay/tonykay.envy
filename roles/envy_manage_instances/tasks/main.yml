@@ -1,5 +1,16 @@
 ---
 
+- name: Create persistent storage when required
+  when: envy_combined_volumes | length > 0
+  community.docker.docker_volume:
+    state:            "{{ envy_state | default('present') }}"
+    name:             "{{ __envy_volume.name }}"
+  loop: "{{ envy_combined_volumes }}"
+  loop_control:
+    loop_var: __envy_volume
+    label: "{{ __envy_volume.name }}"
+  become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
+
 - name: User Output
   debug:
     msg: "{{ ENVY_USER_OUTPUT }} Creating Instances"

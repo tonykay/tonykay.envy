@@ -28,6 +28,7 @@ envy_labels:
   created_by:                 envy
   guid:                       "{{ env | default('000000') }}"
 
-combined_instances: "{{ envy_instances | union(addon_instance | default([])) }}"
+combined_instances: "{{ envy_instances | union(addon_instances | default([])) }}"
+envy_combined_volumes:        "{{ (envy_volumes | default([])) | union(envy_addon_volumes | default([])) }}"
 
 ...
