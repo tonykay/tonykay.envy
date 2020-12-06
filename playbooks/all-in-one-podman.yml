@@ -1,0 +1,146 @@
+---
+- name: Create a container based ssh based lab environment - e.g. for Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  vars:
+
+    envy_name:                    default
+    envy_local_user:              "{{ lookup('env', 'USER') }}"
+    envy_default_domain:          example.com
+    # envy_default_image:          rhel8-ssh
+    # envy_default_image:           tonykay/centos-systemd-ssh
+    envy_default_image:           vmlet-rhel-8
+    envy_default_image:            vmlet-rhel8-ansible
+    # envy_default_image:           rhel8-ssh-test
+    envy_ssh_user:                devops
+
+    envy_ssh_private_key_file:    ~/.ssh/devops.pem
+    envy_ssh_public_key_file:     ~/.ssh/devops.pub
+
+    envy_networks:
+      - name:                     "{{ envy_default_domain }}"
+      - name:                     internal.com
+
+    envy_labels:
+      created_by:                 envy
+      guid:                       "{{ env | default('000000') }}"
+
+    envy_instances:
+
+      - name: control
+        group: control_node
+        volumes:
+          - "~/shared_dir:/home/{{ envy_ssh_user }}"
+        published_ports:
+          - '22'
+          - '8080:8080'
+          - '5432'
+
+      - name: app
+        group: apps
+        # image: rhel7-ssh
+        networks:
+          - name: "{{ envy_default_domain }}"
+          - name: internal.com
+        published_ports:
+          - '22'
+          - '5432'
+          - '8081:8080'
+
+      - name: appdb
+        group: appdbs
+        published_ports:
+          - '22'
+
+  tasks:
+
+    - name: Placeholder
+      debug:
+        msg:
+          - "Insert repo login code here"
+          - "dockerhub - add support for other"
+
+    - name: Create network(s)
+      community.docker.docker_network:
+        name:             "{{ __network.name }}"
+        #        state:            present
+        labels:           "{{ envy_labels }}"
+      loop: "{{ envy_networks }}"
+      loop_control:
+        loop_var: __network
+      become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
+      tags:
+        - network
+        - networking
+
+    - name: Create individual env instances
+      community.docker.docker_container:
+        name:             "{{ __env_container.name }}"
+        # state:            present
+        hostname:         "{{ __container.hostname            | default( __env_container.name) }}"
+        image:            "{{ __env_container.image           | default(envy_default_image) }}"
+        privileged:       "{{ __env_container.privileged      | default(true) }}"
+        published_ports:  "{{ __env_container.published_ports | default([]) }}"
+        networks:         "{{ __env_container.networks        | default([{ 'name': envy_networks[0].name}]) }}"
+        volumes:          "{{ __env_container.volumes         | default(omit) }}"
+        labels:           "{{ envy_labels }}"
+        env:
+          SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL
+          SSH_USER:         "{{ envy_ssh_user | default('vagrant') }}"
+      loop: "{{ envy_instances }}"
+      loop_control:
+        loop_var: __env_container
+        label: "{{ __env_container.name }}"
+      become: "{{ 'no' if ansible_system == 'Darwin' else 'yes' }}"
+      tags:
+        - instances
+        - containers
+        - inventory
+      register: r_container_info
+
+    - name: Debug output register r_container_info
+      debug:
+        verbosity: 2
+        msg:
+          - "name is {{ __container.__env_container.name }}"
+          - "group is {{ __container.__env_container.group }}"
+          - "IP is {{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
+          #        - "Port map is {{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
+      loop: "{{ r_container_info.results }}"
+      loop_control:
+        loop_var: __container
+        label: "{{ __container.__env_container.name }}"
+      tags:
+        - inventory
+
+    - name: Debug output register r_container_info as json file
+      copy:
+        content:  "{{ r_container_info | to_nice_json }}"
+        dest:     "/tmp/container-{{ envy_name }}-info.json"
+        mode:     "0644"
+      tags:
+        - inventory
+
+    - name: Generate in-memory inventory
+      add_host:
+        name:             "{{ __container.__env_container.name }}"
+        shortname:        "{{ __container.__env_container.name }}"
+        mac_ansible_ssh_host: localhost
+        linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
+        group:            "{{ __container.__env_container.group }}"
+        ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
+      loop: "{{ r_container_info.results }}"
+      loop_control:
+        label: "{{ __container.__env_container.name }}"
+        loop_var: __container
+      tags:
+        - inventory
+
+    - name: Create env directory structure and files
+      import_role:
+        name: tonykay.envy.envy_manage_host_envy_configuration
+      tags:
+        - host-config
+
+...
