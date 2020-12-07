@@ -33,24 +33,20 @@
 
   tasks:
 
-    - name: Output value of bar
-      debug:
-        msg: "{{ bar }}"
-
-    - name: Output instances
+    - name: Output all instances
       debug:
         msg:
           - Extracted item is
           - "{{ envy_instances | to_nice_json }}"
 
-    - name: Placeholder
+    - name: Output all instances by jspn_query and jmesquery
       debug:
         msg:
           - "{{ envy_instances | json_query(jmesquery) }}"
       vars:
         jmesquery: "[*]"
 
-    - name: Placeholder
+    - name: "Extract instance {{ foo }} by name"
       debug:
         msg:
           - "{{ envy_instances | json_query(jmesquery) }}"

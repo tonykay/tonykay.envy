@@ -6,7 +6,7 @@
     shortname:        "{{ __container.__envy_container.name }}"
     mac_ansible_ssh_host: localhost
     linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
-    group:            "{{ __container.__envy_container.group }}"
+    group:            "{{ __container.__envy_container.group | default('unassigned') }}"
     ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
   loop: "{{ r_container_info.results }}"
   loop_control:

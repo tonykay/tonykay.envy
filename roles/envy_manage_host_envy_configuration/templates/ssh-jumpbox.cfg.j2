@@ -1,7 +1,7 @@
 Host bastion
   HostName 127.0.0.1
 
-{% for item in envy_instances[1:] %}
+{% for item in combined_instances[1:] %}
 Host {{ item.name }}
   HostName {{ item.ip }}
 

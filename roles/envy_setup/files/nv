@@ -6,14 +6,19 @@ VIRTUALENV_HOME=/opt/envy/venv-envy
 NUM_ARGS=$#
 ACTION=$1
 OBJECT=$2
+TARGET=$3
 
 usage ()
 {
   echo "USAGE: nv <action> <object> <extras>"
   echo
-  echo "nv deploy environment         # Deploy an Environment"
-  echo "nv destroy environment        # Destroy an Environment"
-  echo "nv setup                      # Reconfigure nv"
+  echo "nv deploy environment                  Deploy an Environment"
+  echo "nv destroy environment                 Destroy an Environment"
+  echo "nv fromfile <filename>                 Deploy an Environemnts from file"
+  echo "nv list                                List running instances"
+  echo "nv redeploy <environment>              Destroy and Redeploy an environmnet"
+  echo "nv replace <environment>  <target>     Destroy and Redeploy an environmnet"
+  echo "nv setup                               Reconfigure nv"
   return
 }
 
@@ -72,6 +77,18 @@ cmd_update ()     # Update envy and other dependencies
    ansible-galaxy install -r ~/.ansible/collections/requirements.yml --force-with-deps
 }  
 
+cmd_fromfile ()     # Update envy and other dependencies
+{
+   ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/deploy.yml -e @"$OBJECT"
+}  
+
+cmd_replace ()     # Replace an instance
+{
+  ansible-playbook \
+  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/replace.yml \
+  -e "envy=${OBJECT}" -e  "envy_replacement_target=${TARGET}"
+
+}  
 cmd_login ()     # Update envy and other dependencies
 {
   docker exec -it $1 bash
@@ -89,11 +106,17 @@ case "$ACTION" in
   deploy | destroy | redeploy)
     cmd_default $1 $2
     ;;
+  fromfile)
+    cmd_fromfile
+    ;;
   list)
     cmd_list
     ;;
   login)
     cmd_login "$OBJECT"
+    ;;
+  replace)
+    cmd_replace 
     ;;
   setup)
     cmd_setup
@@ -102,7 +125,8 @@ case "$ACTION" in
     cmd_update
     ;;
   *)
-    echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+    # echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+    usage
     exit 1
      
 esac

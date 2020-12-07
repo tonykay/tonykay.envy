@@ -7,7 +7,7 @@
     envy_state: present
 
   vars_files:
-    - "vars/{{ envy | default('multi') }}/default.yml"
+    - "vars/{{ envy | default('null') }}/default.yml"
 
 #  vars:
 #    combined_instances: "{{ envy_instances | union(addon_instances | default([])) }}"

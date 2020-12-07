@@ -1,0 +1,20 @@
+---
+- name: Replace a single Envy instance by deletion and redeploy
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars_files:
+    - "vars/{{ envy }}/default.yml"
+
+  tasks:
+
+    - name: Manage individual env instances
+      community.docker.docker_container:
+        state: absent
+        name:  "{{ envy_replacement_target }}"
+      register: r_container_info
+
+- import_playbook: deploy.yml
+        
+...
