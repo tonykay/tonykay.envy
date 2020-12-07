@@ -1,0 +1,15 @@
+---
+- name: Clean up all resources
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  tasks:
+
+    - name: Manage individual env instances
+      community.docker.docker_prune:
+        containers: yes
+        images: yes
+        networks: yes
+
+...

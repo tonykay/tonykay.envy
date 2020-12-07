@@ -1,6 +1,6 @@
 ---
 
-envy_name:                    sparse-multi
+envy_name:                    multi
 
 envy_networks:
   - name:                     "{{ envy_default_domain | default('example.com') }}"
