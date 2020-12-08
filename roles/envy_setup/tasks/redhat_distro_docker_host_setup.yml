@@ -1,30 +1,35 @@
 ---
 
-- name: Install Docker via cli    # Certain options in dnf module not yet supported
+- name: Become block for RHEL setup
   block:
 
-    - name: Enable docker-ce repo via command
-      command: "dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo"
-      changed_when: false
+    - name: Install Docker via cli    # Certain options in dnf module not yet supported
+      block:
 
-    - name: Enable docker-ce repo via command
-      command: "dnf install -y --allowerasing --nobest docker-ce"
-      changed_when: false
+        - name: Enable docker-ce repo via command
+          command: "dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo"
+          changed_when: false
 
-- name: Set sticky bit on Docker if required for nv cli
-  file:
-    path: /usr/bin/docker
-    mode: u+s
+        - name: Enable docker-ce repo via command
+          command: "dnf install -y --allowerasing --nobest docker-ce"
+          changed_when: false
 
-- name: Start and enable Docker
-  service:
-    name: docker
-    enabled: true
-    state: started
+    - name: Set sticky bit on Docker if required for nv cli
+      file:
+        path: /usr/bin/docker
+        mode: u+s
 
-- name: Install docker py dependency    
-  pip:
-    name: docker-py
-    state: present
+    - name: Start and enable Docker
+      service:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Install docker py dependency    
+      pip:
+        name: docker-py
+        state: present
+
+  become: "{{ 'false' if ansible_system == 'Darwin' else 'true' }}"
 
 ...

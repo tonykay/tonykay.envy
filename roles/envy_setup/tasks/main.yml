@@ -3,8 +3,6 @@
 - name: Red Hat Setup for Docker based host
   when: ansible_os_family == 'RedHat'
   include_tasks: redhat_distro_docker_host_setup.yml
-  become: "{{ 'false' if ansible_system == 'Darwin' else 'true' }}"
-
 
 - name: "Install nv command to {{ envy_setup_nv_command_home }}"
   copy:

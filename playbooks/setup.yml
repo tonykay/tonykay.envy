@@ -2,10 +2,10 @@
 - name: Setup an envy Red Hat host eg RPM based
   hosts: localhost
   connection: local
-  #  become: true
   gather_facts: true
 
   roles:
+
     - tonykay.envy.envy_setup
 
 ...
