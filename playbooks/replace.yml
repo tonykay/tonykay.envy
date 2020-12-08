@@ -4,6 +4,7 @@
   connection: local
   gather_facts: true
 
+
   vars_files:
     - "vars/{{ envy }}/default.yml"
 
@@ -14,6 +15,7 @@
         state: absent
         name:  "{{ envy_replacement_target }}"
       register: r_container_info
+      become: "{{ 'false' if ansible_system == 'Darwin' else 'true' }}"
 
 - import_playbook: deploy.yml
         

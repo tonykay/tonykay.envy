@@ -14,6 +14,8 @@
         state: absent
         name:  "{{ envy_replacement_target }}"
       register: r_container_info
+      become: "{{ 'false' if ansible_system == 'Darwin' else 'true' }}"
+
 
         
 ...
