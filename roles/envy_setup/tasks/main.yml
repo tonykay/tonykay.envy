@@ -10,6 +10,7 @@
     dest:     "{{ envy_setup_nv_command_home | default('/usr/local/bin') }}/nv"
     owner:    root
     mode:     0555
-  become: "{{ 'false' if ansible_system == 'Darwin' else 'true' }}"
+  become: true
+  #  become: "{{ 'false' if ansible_system == 'Darwin' else 'true' }}"
 
 ...
