@@ -1,0 +1,17 @@
+---
+
+envy_name:                    ubi-8-init
+
+envy_networks:
+  - name:                     "{{ envy_default_domain | default('example.com') }}"
+    
+envy_default_image:           registry.access.redhat.com/ubi8/ubi-init
+
+envy_instances:
+
+  - name: ubi-8-init
+    group: ubi-8-init
+    ssh: false
+      #    image: registry.access.redhat.com/ubi8/ubi-init
+
+...

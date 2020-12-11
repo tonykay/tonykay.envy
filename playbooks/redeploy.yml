@@ -1,6 +1,6 @@
 ---
 
-- import_playbook: destroy.yml
+- import_playbook: delete.yml
 
 - import_playbook: deploy.yml
 

@@ -16,7 +16,7 @@ usage ()
   echo "nv add <environment> <addon>            Add extra instance(s)"
   echo "nv clean                                Clean up old resources"
   echo "nv deploy <environment>                 Deploy an Environment"
-  echo "nv destroy <environment>                Destroy an Environment"
+  echo "nv delete <environment>                 Delete an Environment"
   echo "nv fromfile <filename>                  Deploy an Environemnts from file"
   echo "nv list                                 List running infrastucture"
   echo "nv login <target>                       Login to any instance with bash shell"
@@ -126,7 +126,7 @@ case "$ACTION" in
   clean)
     cmd_clean
     ;;
-  deploy | destroy | redeploy)
+  deploy | delete | redeploy)
     cmd_default $1 $2
     ;;
   fromfile)
