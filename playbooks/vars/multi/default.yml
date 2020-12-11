@@ -7,7 +7,7 @@ envy_networks:
     #  - name:                     internal.com
 
     
-envy_default_image:           vmlet-rhel7-target
+envy_default_image:            vmlet-rhel-7-target
 
 envy_instances:
 

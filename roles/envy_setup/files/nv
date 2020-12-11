@@ -17,12 +17,12 @@ usage ()
   echo "nv clean                                Clean up old resources"
   echo "nv deploy <environment>                 Deploy an Environment"
   echo "nv delete <environment>                 Delete an Environment"
-  echo "nv fromfile <filename>                  Deploy an Environemnts from file"
+  echo "nv fromfile <filename>                  Deploy an Environment from a file"
   echo "nv list                                 List running infrastucture"
   echo "nv login <target>                       Login to any instance with bash shell"
-  echo "nv redeploy <environment>               Destroy and Redeploy an environmnet"
-  echo "nv remove <environment>  <target>       Remove an instance from a config"
-  echo "nv replace <environment>  <target>      Destroy and Redeploy an environmnet"
+  echo "nv redeploy <environment>               Destroy and Redeploy an Environment"
+#  echo "nv remove <environment>  <target>       Remove an instance from a Environment"
+  echo "nv replace <environment>  <target>      Destroy and Redeploy an Environment"
   echo "nv setup                                Reconfigure nv"
   return
 }
