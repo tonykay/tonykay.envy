@@ -15,7 +15,7 @@ envy_instances:
 
   - name: lab-webserver
     group: lab-webserver
-    image: rhel-8-lab-webserver
+    image: tonykay/rhel-8-lab-webserver
     published_ports:
       - "81:80"
 
