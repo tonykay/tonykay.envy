@@ -4,8 +4,6 @@ envy_name:                    multi
 
 envy_networks:
   - name:                     "{{ envy_default_domain | default('example.com') }}"
-    #  - name:                     internal.com
-
     
 envy_default_image:            vmlet-rhel-7-target
 
@@ -13,7 +11,7 @@ envy_instances:
 
   - name: control
     group: control_node
-    image: vmlet-rhel8-ansible
+    image: vmlet-rhel-8-ansible
     volumes:
       - "{{ envy_local_home }}/shared_dir/:/home/{{ envy_ssh_user }}/shared_dir:z,rw"
 
