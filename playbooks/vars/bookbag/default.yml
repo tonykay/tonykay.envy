@@ -15,7 +15,13 @@ envy_instances:
 
   - name: lab-webserver
     group: lab-webserver
-    image: tonykay/rhel-8-lab-webserver
+    image: agnosticlpweb:1.4
+    published_ports:
+      - "80:80"
+
+  - name: lab-content
+    group: lab-webserver
+    image: labcontent:1.0.9
     published_ports:
       - "81:80"
 
