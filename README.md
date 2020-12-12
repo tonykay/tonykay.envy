@@ -65,8 +65,12 @@ This is based on publicly available images being pulled from dockerhub.io or qua
 ````bash
 
 $ nv deploy multi
-
+$ nv list
 ````
+
+You know have access to all those instances with `ssh <instance-name>`. Each instance has ssh access to all the others.
+
+
 
 ### Updating `envy`
 
