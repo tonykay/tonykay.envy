@@ -1,8 +1,7 @@
 # Ansible Collection - tonykay.envy
 
-=======
-# tonykay.envy
-Ansible Envy (ENVironments in Yaml) collection - single system ansible centric container orchestration
+Ansible Envy (ENVironments in Yaml) collection - single system ansible centric container orchestration biased towards labs, workshops, PoCs, and development.
+Need 5 Linux machines to test you latest idea or code - use envy.
 
 ## Installing this collection
 
@@ -62,7 +61,7 @@ This will deploy a simple multi-node environment to your local system.
 
 ---
 **NOTE**
-This is based on publicly available images
+This is based on publicly available images being pulled from dockerhub.io or quay.io so **first** launch may take a few minutes. (`nv preload` is coming which will allow images to be pulled at install time)
 ````bash
 
 $ nv deploy multi
@@ -80,6 +79,7 @@ $ git pull --rebase
 $ ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/setup.yml \
        --become-method sudo --ask-become-pass
 ````
+<!--
 In
 You can install the envy collection with the Ansible Galaxy CLI:
 
@@ -100,3 +100,4 @@ collections:
 
 The collection roles are largely abstracted by a series of playbooks in the `playbooks` directory.
 
+-->
