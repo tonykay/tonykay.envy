@@ -23,9 +23,17 @@ envy_instances:
     published_ports:
       - "10080:10080"
 
+  - name: antora
+    group: control_node
+    image: antora
+    volumes:
+      - "{{ envy_local_home }}/content/:/home/{{ envy_ssh_user }}/shared_dir:z,rw"
+
   - name: lab-webserver
     group: lab-webserver
     image: rhel-8-lab-webserver
+    volumes:
+      - "{{ envy_local_home }}/content/output:/var/www/html:z,rw"
     published_ports:
       - "81:80"
 
