@@ -1,0 +1,13 @@
+---
+
+- name: Become block for RHEL setup
+  block:
+
+    - name: Install docker py dependency    
+      pip:
+        name: docker-py
+        state: present
+
+  become: "{{ 'false' if ansible_system == 'Darwin' else 'true' }}"
+
+...

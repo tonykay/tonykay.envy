@@ -126,7 +126,7 @@ case "$ACTION" in
   clean)
     cmd_clean
     ;;
-  deploy | delete | redeploy)
+  classroom | deploy | delete | redeploy)
     cmd_default $1 $2
     ;;
   fromfile)

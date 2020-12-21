@@ -1,0 +1,316 @@
+{
+    "r_env_containers": {
+        "changed": false,
+        "containers": [
+            {
+                "Command": "/sbin/init",
+                "Created": 1607695150,
+                "Id": "cb5b70f6fd9a2756eeaffbaf76592544d31c8a388e47ab4592b285bc5b8708c8",
+                "Image": "vmlet-rhel7-target",
+                "Names": [
+                    "/appdb1"
+                ],
+                "Ports": [
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 22,
+                        "PublicPort": 32988,
+                        "Type": "tcp"
+                    }
+                ],
+                "Status": "Up 43 minutes"
+            },
+            {
+                "Command": "/sbin/init",
+                "Created": 1607695149,
+                "Id": "87f5f3a9872c331aab91e9a264bb9833a82755421bd7809085d2617d1c1878ca",
+                "Image": "vmlet-rhel7-target",
+                "Names": [
+                    "/app2"
+                ],
+                "Ports": [
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 22,
+                        "PublicPort": 32987,
+                        "Type": "tcp"
+                    }
+                ],
+                "Status": "Up 43 minutes"
+            },
+            {
+                "Command": "/sbin/init",
+                "Created": 1607695147,
+                "Id": "daab17298071433824927fb14c5abe0ddb210923de7df0733aed921b6ef41b49",
+                "Image": "vmlet-rhel7-target",
+                "Names": [
+                    "/app1"
+                ],
+                "Ports": [
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 22,
+                        "PublicPort": 32986,
+                        "Type": "tcp"
+                    }
+                ],
+                "Status": "Up 43 minutes"
+            },
+            {
+                "Command": "/sbin/init",
+                "Created": 1607695146,
+                "Id": "2c6d53ac1a39bd7cadb4e0b0bd829e61f414c1321b153c5dada04ddab93cc1a6",
+                "Image": "vmlet-rhel7-target",
+                "Names": [
+                    "/frontend1"
+                ],
+                "Ports": [
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 80,
+                        "PublicPort": 80,
+                        "Type": "tcp"
+                    },
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 22,
+                        "PublicPort": 32985,
+                        "Type": "tcp"
+                    }
+                ],
+                "Status": "Up 43 minutes"
+            },
+            {
+                "Command": "/sbin/init",
+                "Created": 1607695145,
+                "Id": "190803f688eddafe687b395264f76e28b5c4c9756e513a9552313d7c17bb689c",
+                "Image": "vmlet-rhel8-ansible",
+                "Names": [
+                    "/control"
+                ],
+                "Ports": [
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 22,
+                        "PublicPort": 32984,
+                        "Type": "tcp"
+                    }
+                ],
+                "Status": "Up 43 minutes"
+            },
+            {
+                "Command": "/sbin/init",
+                "Created": 1607693486,
+                "Id": "94de12c72c056bc207ee60f51eb61fa86312d647afd86b8afb81852967dc9aed",
+                "Image": "registry.access.redhat.com/ubi8/ubi-init",
+                "Names": [
+                    "/ubi-8-init"
+                ],
+                "Ports": [],
+                "Status": "Up About an hour"
+            },
+            {
+                "Command": "/sbin/init",
+                "Created": 1607692623,
+                "Id": "c58944c75e66b756fc4870a18dc4df58cc59ddbb3db876774ae0b0a91001c3af",
+                "Image": "vmlet-rhel8-ansible",
+                "Names": [
+                    "/rhel8"
+                ],
+                "Ports": [],
+                "Status": "Up About an hour"
+            },
+            {
+                "Command": "docker-entrypoint.sh /sbin/init",
+                "Created": 1607635702,
+                "Id": "42274fef1ec60a08c3a7e81859a7d9002245b9ac2b4ad5336a804de889d8884b",
+                "Image": "tonykay/rhel-8-lab-webserver",
+                "Names": [
+                    "/lab-webserver"
+                ],
+                "Ports": [
+                    {
+                        "PrivatePort": 443,
+                        "Type": "tcp"
+                    },
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 80,
+                        "PublicPort": 81,
+                        "Type": "tcp"
+                    },
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 22,
+                        "PublicPort": 32990,
+                        "Type": "tcp"
+                    }
+                ],
+                "Status": "Up 17 hours"
+            },
+            {
+                "Command": "container-entrypoint /usr/libexec/s2i/run",
+                "Created": 1607635700,
+                "Id": "0784df203a45124fe6e56c992bee35c0da66b0ec5e51e640a9a1b9c8edb23dd9",
+                "Image": "quay.io/openshifthomeroom/workshop-terminal:latest",
+                "Names": [
+                    "/terminal"
+                ],
+                "Ports": [
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 10080,
+                        "PublicPort": 10080,
+                        "Type": "tcp"
+                    },
+                    {
+                        "IP": "0.0.0.0",
+                        "PrivatePort": 22,
+                        "PublicPort": 32989,
+                        "Type": "tcp"
+                    }
+                ],
+                "Status": "Up 17 hours"
+            }
+        ],
+        "failed": false,
+        "host_info": {
+            "Architecture": "x86_64",
+            "BridgeNfIp6tables": true,
+            "BridgeNfIptables": true,
+            "CPUSet": true,
+            "CPUShares": true,
+            "CgroupDriver": "cgroupfs",
+            "ClusterAdvertise": "",
+            "ClusterStore": "",
+            "ContainerdCommit": {
+                "Expected": "8fba4e9a7d01810a393d5d25a3621dc101981175",
+                "ID": "8fba4e9a7d01810a393d5d25a3621dc101981175"
+            },
+            "Containers": 9,
+            "ContainersPaused": 0,
+            "ContainersRunning": 9,
+            "ContainersStopped": 0,
+            "CpuCfsPeriod": true,
+            "CpuCfsQuota": true,
+            "Debug": true,
+            "DefaultRuntime": "runc",
+            "DockerRootDir": "/var/lib/docker",
+            "Driver": "overlay2",
+            "DriverStatus": [
+                [
+                    "Backing Filesystem",
+                    "extfs"
+                ],
+                [
+                    "Supports d_type",
+                    "true"
+                ],
+                [
+                    "Native Overlay Diff",
+                    "true"
+                ]
+            ],
+            "ExperimentalBuild": true,
+            "GenericResources": null,
+            "HttpProxy": "gateway.docker.internal:3128",
+            "HttpsProxy": "gateway.docker.internal:3129",
+            "ID": "447I:4FV5:OFFC:NBJN:G3J2:CTDU:HRWO:KT42:ABHM:M4IS:BTIN:2JHC",
+            "IPv4Forwarding": true,
+            "Images": 238,
+            "IndexServerAddress": "https://index.docker.io/v1/",
+            "InitBinary": "docker-init",
+            "InitCommit": {
+                "Expected": "fec3683",
+                "ID": "fec3683"
+            },
+            "Isolation": "",
+            "KernelMemory": true,
+            "KernelMemoryTCP": true,
+            "KernelVersion": "5.4.39-linuxkit",
+            "Labels": [],
+            "LiveRestoreEnabled": false,
+            "LoggingDriver": "json-file",
+            "MemTotal": 6234099712,
+            "MemoryLimit": true,
+            "NCPU": 8,
+            "NEventsListener": 3,
+            "NFd": 96,
+            "NGoroutines": 93,
+            "Name": "docker-desktop",
+            "NoProxy": "",
+            "OSType": "linux",
+            "OomKillDisable": true,
+            "OperatingSystem": "Docker Desktop",
+            "PidsLimit": true,
+            "Plugins": {
+                "Authorization": null,
+                "Log": [
+                    "awslogs",
+                    "fluentd",
+                    "gcplogs",
+                    "gelf",
+                    "journald",
+                    "json-file",
+                    "local",
+                    "logentries",
+                    "splunk",
+                    "syslog"
+                ],
+                "Network": [
+                    "bridge",
+                    "host",
+                    "ipvlan",
+                    "macvlan",
+                    "null",
+                    "overlay"
+                ],
+                "Volume": [
+                    "local"
+                ]
+            },
+            "ProductLicense": "Community Engine",
+            "RegistryConfig": {
+                "AllowNondistributableArtifactsCIDRs": [],
+                "AllowNondistributableArtifactsHostnames": [],
+                "IndexConfigs": {
+                    "docker.io": {
+                        "Mirrors": [],
+                        "Name": "docker.io",
+                        "Official": true,
+                        "Secure": true
+                    }
+                },
+                "InsecureRegistryCIDRs": [
+                    "127.0.0.0/8"
+                ],
+                "Mirrors": []
+            },
+            "RuncCommit": {
+                "Expected": "dc9208a3303feef5b3839f4323d9beb36df0a9dd",
+                "ID": "dc9208a3303feef5b3839f4323d9beb36df0a9dd"
+            },
+            "Runtimes": {
+                "runc": {
+                    "path": "runc"
+                }
+            },
+            "SecurityOptions": [
+                "name=seccomp,profile=default"
+            ],
+            "ServerVersion": "19.03.13",
+            "SwapLimit": true,
+            "Swarm": {
+                "ControlAvailable": false,
+                "Error": "",
+                "LocalNodeState": "inactive",
+                "NodeAddr": "",
+                "NodeID": "",
+                "RemoteManagers": null
+            },
+            "SystemStatus": null,
+            "SystemTime": "2020-12-11T14:42:20.2527725Z",
+            "Warnings": null
+        }
+    }
+}

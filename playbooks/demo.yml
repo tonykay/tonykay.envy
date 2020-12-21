@@ -1,0 +1,12 @@
+
+envy_networks:
+  - name: foo.bar.com
+  - name: bar.com
+
+
+envy_instances:
+  - name: app12
+  - name: app13
+  - name: app14
+
+

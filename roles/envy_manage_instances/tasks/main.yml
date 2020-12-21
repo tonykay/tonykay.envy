@@ -26,7 +26,7 @@
     published_ports:  "{{ [ '22' ]                            | union (__envy_container.published_ports | default([])) }}"
     networks:         "{{ __envy_container.networks           | default([{ 'name': envy_networks[0].name}]) }}"
     volumes:          "{{ __envy_container.volumes            | default(omit) }}"
-    cmd:              "{{ __envy_container.cmd                | default(omit) }}"
+    command:          "{{ __envy_container.cmd                | default(omit) }}"
     labels:           "{{ envy_labels }}"
     env:
       SSH_SUDO:         ALL=(ALL) NOPASSWD:ALL

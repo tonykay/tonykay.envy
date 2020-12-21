@@ -1,13 +1,13 @@
 ---
 
-classroom_instances:
+envy_instances:
 
   - name: antora
     group: antora
     image: antora/antora
-    cmd:
+    cmd: classroom.yml 
     volumes:
-      - "{{ envy_local_home }}/.classroom/source:/antora:z,rw"
+      - "{{ envy_local_home }}/.classroom:/antora:z,rw"
 
   - name: terminal
     group: terminal
@@ -15,12 +15,20 @@ classroom_instances:
     published_ports:
       - "10080:10080"
 
-  - name: lab-webserver
-    group: lab-webserver
-    image: registry.access.redhat.com/rhel8/httpd-24
+  - name: classroom-backend
+    group: classroom-backend
+    image: httpd 
     volumes:
-      - "{{ envy_local_home }}/.classroom/output:/antora:z,rw"
+      - "{{ envy_local_home }}/.classroom/output:/usr/local/apache2/htdocs/:z,rw"
     published_ports:
       - "8888:80"
+
+  - name: classroom
+    group: lab-webserver
+    image: "agnosticlpweb:1.0"
+    volumes:
+      - "/tmp/index.html:/usr/share/nginx/html/index.html:z,rw"
+    published_ports:
+      - "80:80"
 
 ...

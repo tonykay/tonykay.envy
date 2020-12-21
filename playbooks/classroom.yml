@@ -1,0 +1,59 @@
+---
+
+- name: Deploy classroom configuration
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  vars:
+    envy_state: present
+
+  vars_files:
+    - "vars/{{ envy | default('null') }}/default.yml"
+    - "vars/classroom/default.yml"
+
+  tasks:
+
+    - name: Validate envy config
+      debug:
+        msg:
+          - "envy_networks: {{ envy_networks }}"    
+          - "envy_instances: {{ envy_instances }}"    
+
+    - name: Git clone lab
+      git:
+        repo: 'https://github.com/tonykay/classroom-multi.git'
+        dest: ~/.classroom
+        force: true
+      become_user: "{{ envy_local_user }}"
+      tags:
+        - git
+
+    - name: Create individual env instances
+      import_role:
+        name: tonykay.envy.envy_manage_networks
+      vars:
+        envy_state: present
+
+    - name: Create individual env instances
+      import_role:
+        name: tonykay.envy.envy_manage_instances
+      vars:
+        envy_container_state: started
+
+    - name: Generate in-memory inventory
+      import_role:
+        name: tonykay.envy.envy_manage_inventory
+
+    - name: Create env directory structure and files
+      import_role:
+        name: tonykay.envy.envy_manage_host_envy_configuration
+      vars:
+        envy_state: present  
+      tags:
+        - host-config
+
+...
+
+
+
+...

@@ -1,0 +1,56 @@
+---
+- name: Create a container based ssh based lab environment - e.g. for Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+
+    foo: app
+
+    envy_instances:
+
+      - name: control
+        group: control_node
+        published_ports:
+          - '22'
+          - '8080:8080'
+          - '5432'
+
+      - name: app
+        group: apps
+        # image: rhel7-ssh
+        networks:
+          - name: internal.com
+        published_ports:
+          - '22'
+          - '5432'
+          - '8081:8080'
+
+      - name: appdb
+        group: appdbs
+        published_ports:
+          - '22'
+
+  tasks:
+
+    - name: Output all instances
+      debug:
+        msg:
+          - Extracted item is
+          - "{{ envy_instances | to_nice_json }}"
+
+    - name: Output all instances by jspn_query and jmesquery
+      debug:
+        msg:
+          - "{{ envy_instances | json_query(jmesquery) }}"
+      vars:
+        jmesquery: "[*]"
+
+    - name: "Extract instance {{ foo }} by name"
+      debug:
+        msg:
+          - "{{ envy_instances | json_query(jmesquery) }}"
+      vars:
+        # jmesquery: "[*].name"
+        # jmesquery: "[? name=='app']"
+        jmesquery: "[? name=='{{ foo }}']"
