@@ -20,7 +20,8 @@ envy_instances:
     image: rhel-8-httpd  
     volumes:
       - "{{ envy_local_home }}/.classroom/output:/var/www/html/:z,rw"
-      - "/tmp/index.html://var/www/html/index.html:z,rw"
+      - "~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/classroom/index.html://var/www/html/index.html:z,rw"
+        #      - "/tmp/index.html://var/www/html/index.html:z,rw"
     published_ports:
       - "80:8080"
 
