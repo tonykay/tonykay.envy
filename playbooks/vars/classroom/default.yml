@@ -15,24 +15,23 @@ envy_instances:
     published_ports:
       - "10080:10080"
 
-  - name: classroom
-    group: classroom-backend
-    image: rhel-8-httpd  
-    volumes:
-      - "{{ envy_local_home }}/.classroom/output:/var/www/html/:z,rw"
-      - "~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/classroom/index.html://var/www/html/index.html:z,rw"
-        #      - "/tmp/index.html://var/www/html/index.html:z,rw"
-    published_ports:
-      - "80:8080"
-
-#  - name: classroom-backend
+#  - name: classroom
 #    group: classroom-backend
-#    image: httpd 
+#    image: rhel-8-httpd  
 #    volumes:
-#      - "{{ envy_local_home }}/.classroom/output:/usr/local/apache2/htdocs/:z,rw"
-#      - "/tmp/index.html://usr/local/apache2/htdocs/foo.html:z,ro"
+#      - "{{ envy_local_home }}/.classroom/output:/var/www/html/:z,rw"
+#      - "~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/classroom/index.html://var/www/html/index.html:z,rw"
 #    published_ports:
-#      - "80:80"
+#      - "80:8080"
+
+  - name: classroom
+    group: classroom
+    image: httpd 
+    volumes:
+      - "{{ envy_local_home }}/.classroom/output:/usr/local/apache2/htdocs/:z,rw"
+      - "~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/classroom/index.html://usr/local/apache2/htdocs/index.html:z,ro"
+    published_ports:
+      - "80:80"
 
 #  - name: classroom
 #    group: lab-webserver
