@@ -15,12 +15,6 @@ envy_instances:
     published_ports:
       - "10080:10080"
 
-  - name: docs
-    group: docs
-    image: quay.io/varodrig/containers-lab:1.0
-    published_ports:
-    - "8080:80"
-
 #  - name: classroom
 #    group: classroom-backend
 #    image: rhel-8-httpd  
@@ -34,9 +28,10 @@ envy_instances:
     group: classroom
     image: httpd 
     volumes:
-      - "/Users/tok/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/classroom/index.html:/usr/local/apache2/htdocs/index.html:ro"
+      - "{{ envy_local_home }}/.classroom/output:/usr/local/apache2/htdocs/:z,rw"
+      - "~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/classroom/index.html://usr/local/apache2/htdocs/index.html:z,ro"
     published_ports:
-      - "8080:80"
+      - "80:80"
 
 #  - name: classroom
 #    group: lab-webserver
