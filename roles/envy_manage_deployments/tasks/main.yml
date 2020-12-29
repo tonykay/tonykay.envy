@@ -5,9 +5,11 @@
     f_envy_env_name:  "{{ envy_components[0] }}"
     f_envy_addons:    "{{ envy_components | difference(envy_components[0]) }}"
 
-- name: "Read all var files in the f_envy_env_name env dir"
-  include_vars:
-    dir: "{{ envy_home }}/envs/{{ f_envy_env_name }}"
+- name: Read in base env 
+  include_tasks: compose_assembler.yml
+  vars:
+    envy_component_type: envs
+    envy_component: "{{ f_envy_env_name }}"
 
 - name: Read in base env and all addons or extras
   include_tasks: compose_assembler.yml
