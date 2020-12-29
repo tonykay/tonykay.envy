@@ -7,8 +7,8 @@
 
 - name: "Read all var files in the f_envy_env_name env dir"
   include_vars:
-    # dir: "{{ envy_home | default('.') }}/envs/{{ f_envy_env_name }}"
-    dir: "{{ role_path }}/../../playbooks/vars/compose/envs/{{ f_envy_env_name }}"
+    dir: "{{ envy_home }}/envs/{{ f_envy_env_name }}"
+    #dir: "{{ role_path }}/../../playbooks/vars/compose/envs/{{ f_envy_env_name }}"
 
 - name: Read in base env and all addons or extras
   include_tasks: compose_assembler.yml
