@@ -1,0 +1,69 @@
+---
+
+#
+#
+#
+#
+
+env_name: multi
+
+networks:
+  default:
+      name: example.com
+
+services:
+
+  control:
+    container_name: control
+    hostname: control
+    image: tonykay/vmlet-rhel-8-ansible
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+    ports:
+      - "22"
+    privileged: true
+      #volumes:
+      #- "{{ envy_local_home }}/shared_dir/:/home/{{ envy_ssh_user }}/shared_dir:z,rw"
+
+    
+  frontend:
+    container_name: frontend
+    hostname: frontend
+    image: tonykay/vmlet-rhel-8-ansible
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+    ports:
+      - "22"
+      - "8080:80"
+    privileged: true
+
+  app-01:
+    container_name: app-01
+    hostname: app-01
+    image: tonykay/vmlet-rhel-8-ansible
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+    ports:
+      - "22"
+    privileged: true
+
+  app-02:
+    container_name: app-02
+    hostname: app2
+    image: tonykay/vmlet-rhel-8-ansible
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+    ports:
+      - "22"
+    privileged: true
+
+  appdb:
+    container_name: appdb
+    hostname: appdb
+    image: tonykay/vmlet-rhel-8-ansible
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+    ports:
+      - "22"
+    privileged: true
+...

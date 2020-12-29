@@ -1,0 +1,53 @@
+---
+
+#
+# classroom - a "bookbag replacement providing a web server, UI, and terminal
+# for workshops, labs etc
+#
+
+services:
+
+#  antora:
+#    image: antora/antora
+#    cmd: classroom.yml 
+#    labels:
+#      com.envy.env_name: "{{ env_name }}"
+#    volumes:
+#      - "{{ envy_local_home }}/.classroom:/antora:z,rw"
+
+  terminal:
+    container_name: terminal
+    hostname: terminal
+    image: quay.io/openshifthomeroom/workshop-terminal:latest
+    ports:
+      - "10080:10080"
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+
+  web-backend:
+    container_name: web-backend
+    hostname: web-backend
+    image: quay.io/varodrig/containers-lab:1.0
+    ports:
+      - "8088:80"
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+
+#  - name: classroom
+#    group: classroom-backend
+#    image: rhel-8-httpd  
+#    volumes:
+#      - "{{ envy_local_home }}/.classroom/output:/var/www/html/:z,rw"
+#      - "~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/classroom/index.html://var/www/html/index.html:z,rw"
+#    ports:
+#      - "80:8080"
+
+#  - name: classroom
+#    group: lab-webserver
+#    image: "agnosticlpweb:1.0"
+#    volumes:
+#      - "/tmp/index.html:/usr/share/nginx/html/index.html:z,rw"
+#    ports:
+#      - "80:80"
+
+...

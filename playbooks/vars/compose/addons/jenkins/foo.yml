@@ -3,24 +3,12 @@ networks:
   default:
     name: example.com
 
-
-
 services:
   jenkins:
     container_name: jenkins
     image: tonykay/vmlet-rhel-8-ansible
     labels:
-      com.envy.env_name: multi
+      com.envy.env_name: "{{ env_name }}"
     ports:
     - '22'
-    privileged: true
-  control:
-    container_name: control
-    image: tonykay/vmlet-rhel-8-ansible
-    labels:
-      com.envy.env_name: multi
-    ports:
-    - '22'
-    - '44'
-    - 80:8080
-    privileged: true
+    - "81:8080"
