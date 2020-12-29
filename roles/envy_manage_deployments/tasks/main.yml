@@ -2,29 +2,30 @@
 
 - name: Isolate env and add ons from envy_compose_components
   set_fact:
-    f_envy_env_name:      "{{ envy_components[0] }}"
-    f_envy_addons:       "{{ envy_components | difference(envy_components[0]) }}"
+    f_envy_env_name:  "{{ envy_components[0] }}"
+    f_envy_addons:    "{{ envy_components | difference(envy_components[0]) }}"
 
 - name: "Read all var files in the f_envy_env_name env dir"
   include_vars:
     dir: "{{ envy_home }}/envs/{{ f_envy_env_name }}"
-    #dir: "{{ role_path }}/../../playbooks/vars/compose/envs/{{ f_envy_env_name }}"
 
 - name: Read in base env and all addons or extras
   include_tasks: compose_assembler.yml
   loop: "{{ f_envy_addons }}"
   loop_control:
-    loop_var: envy_addon
+    loop_var: envy_component
+  vars:
+    envy_component_type: addons
 
 - name: Output compose networks, volumes, services when verbosity >= 2
   debug:
     msg:
       - "Networks:"
-      - "{{ f_networks  | to_nice_yaml }}"
+      - "{{ (f_networks | default({})) | to_nice_yaml }}"
       - "Volumes:"
-      - "{{ f_volumes   | to_nice_yaml }}"
+        #- "{{ f_volumes   | to_nice_yaml }}"
       - "Services:"
-      - "{{ f_services  | to_nice_yaml }}"
+        #- "{{ f_services  | to_nice_yaml }}"
     verbosity: 2
 
 - name: Write docker compose file

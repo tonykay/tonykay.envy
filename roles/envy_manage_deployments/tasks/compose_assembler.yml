@@ -1,8 +1,8 @@
 ---
 
-- name: Read in the addon directory vars
+- name: "Read in the {{ envy_component_type }} directory vars"
   include_vars:
-    dir: "{{ envy_home | default('.') }}/addons/{{ envy_addon }}"
+    dir: "{{ envy_home | default('.') }}/{{ envy_component_type }}/{{ envy_component }}"
     # dir: "{{ role_path }}/../../playbooks/vars/compose/addons/{{ envy_addon }}"
 
 - name: Append addon docker compose dictionaries
