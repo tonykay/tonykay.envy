@@ -29,6 +29,6 @@ envy_instances:
     volumes:
       - "/tmp/index.html:/usr/share/nginx/html/index.html:z,rw"
     published_ports:
-      - "80:80"
+      - "8080:80"
 
 ...
