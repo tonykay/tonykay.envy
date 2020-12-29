@@ -1,0 +1,17 @@
+
+env_name: multi-by-var
+
+#volumes:
+#  - /tmp/foo1
+
+services:
+  app1:
+    container_name: app1
+    image: tonykay/vmlet-rhel-8-ansible
+    hostname: app1
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+      com.envy.env_foo: "{{ env_name }}"
+    ports:
+    - '22'
+    privileged: true

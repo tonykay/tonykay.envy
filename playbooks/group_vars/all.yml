@@ -5,6 +5,8 @@ ENVY_USER_OUTPUT:             ENVY_USER_OUTPUT
 envy_name:                    multi
 envy_state:                   present
 
+envy_home:                    "/Users/tok/repos/tonykay.envy/playbooks/vars"
+
 envy_pre_run_message:         ""
 envy_post_run_message:        ""
 

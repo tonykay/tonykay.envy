@@ -1,0 +1,26 @@
+---
+
+- name: Read in the addon directory vars
+  include_vars:
+    #dir: "{{ envy_home | default('.') }}/addons/{{ envy_addon }}"
+    dir: "{{ role_path }}/../../playbooks/vars/compose/addons/{{ envy_addon }}"
+
+- name: Append addon docker compose dictionaries
+  set_fact:
+    f_configs:  "{{ (f_configs  | default({})) | combine(configs  | default({})) }}"
+    f_services: "{{ (f_services | default({})) | combine(services | default({})) }}"
+    f_volumes:  "{{ (f_volumes  | default({})) | combine(volumes  | default({})) }}"
+    f_networks: "{{ (f_networks | default({})) | combine(networks | default({})) }}"
+
+- name: Output compose networks, volumes, services when verbosity >= 2
+  debug: 
+    msg:
+      - "Networks:"
+      - "{{ f_networks  | to_nice_yaml }}"
+      - "Volumes:"
+      - "{{ f_volumes   | to_nice_yaml }}"
+      - "Services:"
+      - "{{ f_services  | to_nice_yaml }}"
+    verbosity: 2
+
+...    

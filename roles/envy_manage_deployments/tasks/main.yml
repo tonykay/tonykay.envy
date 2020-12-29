@@ -1,0 +1,73 @@
+---
+
+- name: Isolate env and add ons from envy_compose_components
+  set_fact:
+    f_envy_env_name:      "{{ envy_components[0] }}"
+    f_envy_addons:       "{{ envy_components | difference(envy_components[0]) }}"
+
+- name: "Read all var files in the f_envy_env_name env dir"
+  include_vars:
+    # dir: "{{ envy_home | default('.') }}/envs/{{ f_envy_env_name }}"
+    dir: "{{ role_path }}/../../playbooks/vars/compose/envs/{{ f_envy_env_name }}"
+
+- name: Read in base env and all addons or extras
+  include_tasks: compose_assembler.yml
+  loop: "{{ f_envy_addons }}"
+  loop_control:
+    loop_var: envy_addon
+
+- name: Output compose networks, volumes, services when verbosity >= 2
+  debug:
+    msg:
+      - "Networks:"
+      - "{{ f_networks  | to_nice_yaml }}"
+      - "Volumes:"
+      - "{{ f_volumes   | to_nice_yaml }}"
+      - "Services:"
+      - "{{ f_services  | to_nice_yaml }}"
+    verbosity: 2
+
+- name: Write docker compose file
+  template:
+    src:    docker-compose.yml.j2
+    dest:   "/tmp/docker-compose-{{ f_envy_env_name }}.yml"
+
+- name: Define docker compose definition from file input(s)
+  set_fact:
+    f_envy_compose_definition:
+      networks:   "{{ f_networks }}"
+      volumes:    "{{ f_volumes }}"
+      services:   "{{ f_services }}"
+
+- name: Output envy_compose_definition
+  debug: 
+    var: f_envy_compose_definition
+    verbosity: 2
+
+- name: Prune containers
+  community.docker.docker_prune:
+    containers: yes
+
+- name: Compose with definition fact f_envy_compose_definition
+  community.docker.docker_compose:
+    project_name:   "{{ f_envy_env_name }}"
+    definition:     "{{ f_envy_compose_definition }}"
+
+- name: Gather host info and detailed container info
+  community.docker.docker_host_info:
+    containers: yes
+    verbose_output: yes
+  register: r_host_info
+
+- name: Output r_host_info
+  debug:
+    var: r_host_info
+    verbosity: 2
+
+- name: Write r_host_info
+  when: ansible_verbosity >= 2
+  template:
+    src: r_host_info.json.j2
+    dest: /tmp/r_host_info.json
+
+...

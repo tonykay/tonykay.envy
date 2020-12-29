@@ -1,0 +1,13 @@
+---
+ {{ ansible_managed | comment }}
+
+networks:
+  {{ f_networks | to_nice_yaml(indent=2) | indent(2) }}
+
+volumes:
+  {{ f_volumes | to_nice_yaml(indent=2) | indent(2) }}
+
+services:
+  {{ f_services | to_nice_yaml(indent=2) | indent(2) }}
+
+...
