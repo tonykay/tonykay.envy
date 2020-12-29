@@ -1,7 +1,7 @@
 ---
 
 envy_name:                    rhel8
-
+envy_default_domain:          dev
 envy_networks:
   - name:                     "{{ envy_default_domain | default('example.com') }}"
 
@@ -10,7 +10,7 @@ envy_instances:
   - name: rhel8
     group: rhel8
     image: vmlet-rhel8-ansible
-    ssh: false
+      #    ssh: false
     volumes:
       - "{{ envy_local_home }}/shared_dir/:/home/{{ envy_ssh_user }}/shared_dir:z,rw"
       - "{{ envy_local_home }}/repos/:/repos/:z,rw"
