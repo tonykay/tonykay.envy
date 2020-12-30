@@ -7,9 +7,6 @@ NUM_ARGS=$#
 ACTION=$1
 shift
 OBJECTS=$@
-#TARGET=$3
-
-echo Objects: "$OBJECTS"
 
 usage ()
 {
@@ -95,7 +92,6 @@ cmd_replace ()     # Replace an instance
   ansible-playbook \
   ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/replace.yml \
   -e "envy=${OBJECT}" -e  "envy_replacement_target=${TARGET}"
-
 }  
 
 cmd_remove ()     # Remove an instance
@@ -111,14 +107,13 @@ cmd_up ()
   for file in ${OBJECTS}
   do
       file_list=${file_list},$file
-        echo $file_list
   done
   
   compose_files="{envy_components: [$(echo $file_list | sed 's/^,//')]}"
-  echo $compose_files
+#  echo $compose_files
+#  echo Action is "${ACTION}"
+#  echo ansible-playbook call_appender_role.yml -e "$compose_files"
 
-  echo Action is "${ACTION}"
-  echo ansible-playbook call_appender_role.yml -e "$compose_files"
   ansible-playbook ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/deployer.yml \
     -e "$compose_files"
       #ansible-playbook call_appender_role.yml -e "$compose_files"
@@ -126,7 +121,7 @@ cmd_up ()
 
 cmd_login ()     # Update envy and other dependencies
 {
-  docker exec -it $1 bash
+  docker exec -it "${1}" bash
 }  
 cmd_clean ()     # Update envy and other dependencies
 {
@@ -157,7 +152,7 @@ case "$ACTION" in
     cmd_list
     ;;
   login)
-    cmd_login "$OBJECT"
+    cmd_login $1
     ;;
   remove)
     cmd_remove
