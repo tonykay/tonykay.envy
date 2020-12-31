@@ -1,18 +1,58 @@
 ---
 
-- name: Generate in-memory inventory
+- name: Generate in-memory inventory via compose orchestration
   add_host:
-    name:             "{{ __container.__envy_container.name }}"
-    shortname:        "{{ __container.__envy_container.name }}"
-    mac_ansible_ssh_host: localhost
-    linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
-    group:            "{{ __container.__envy_container.group | default('unassigned') }}"
-    ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
-  loop: "{{ r_container_info.results }}"
+    name:                     "{{ __container.Names[0] | regex_replace('\/', '') }}"
+    shortname:                "{{ __container.Names[0] | regex_replace('\/', '') }}"
+    mac_ansible_ssh_host:     localhost
+    linux_ansible_ssh_host:   "{{ __container.NetworkSettings.Networks[networks.default.name].IPAddress }}"
+#    group:                   "{{ __container.__envy_container.group | default('unassigned') }}"
+    ansible_ssh_port:         "{{ (__container | json_query(jmesquery_ssh))[0] }}"
+  loop: "{{ r_host_info.containers }}"
   loop_control:
-    label: "{{ __container.__envy_container.name }}"
+    # label: "{{ __container.__envy_container.name }}"
     loop_var: __container
+  vars:
+    jmesquery_ssh: "Ports[?PrivatePort==`22`].PublicPort" 
+
   tags:
     - inventory
+
+
+# - name: Generate in-memory inventory via compose orchestration
+#      debug:
+#        msg:
+#          - "name: {{ __container.Names[0] | regex_replace('\/', '') }}"
+#          - "Ports: {{ __container.Ports }}"
+#          - "ssh Port: {{ __container | json_query(jmesquery_ssh) }}"
+#          - "TCP Port: {{ __container | json_query(jmesquery_tcp) }}"
+#            #- "ssh Pors: {{ __container.Ports | json_query(jmesquery) }}"
+#      loop: "{{ containers }}"
+#      loop_control:
+#        label: "docker" #container # "{{ __container.Names[0] | regex_replace('\/', '') }}"
+#        loop_var: __container
+#      vars:
+#        jmesquery_tcp: "Ports[?Type=='tcp'].PublicPort" #[?PrivatePort=="tcp"].PublicPort'
+#    jmesquery_ssh: "Ports[?PrivatePort==`22`].PublicPort" #[?PrivatePort=="tcp"].PublicPort'
+#          #jmesquery_ssh: "Ports[?PrivatePort=='22'].PublicPort" #[?PrivatePort=="tcp"].PublicPort'
+#
+
+# old inventory using different register format not using compose.    
+#
+
+#- name: Generate in-memory inventory
+#  add_host:
+#    name:             "{{ __container.__envy_container.name }}"
+#    shortname:        "{{ __container.__envy_container.name }}"
+#    mac_ansible_ssh_host: localhost
+#    linux_ansible_ssh_host: "{{ __container.container.NetworkSettings.Networks[envy_networks[0].name].IPAddress }}"
+#    group:            "{{ __container.__envy_container.group | default('unassigned') }}"
+#    ansible_ssh_port: "{{ __container.container.NetworkSettings.Ports['22/tcp'][0].HostPort }}"
+#  loop: "{{ r_container_info.results }}"
+#  loop_control:
+#    label: "{{ __container.__envy_container.name }}"
+#    loop_var: __container
+#  tags:
+#    - inventory
 
 ...

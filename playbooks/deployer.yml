@@ -3,10 +3,23 @@
 - name: Deploy envy configuration and addons
   hosts: localhost
   connection: local
-  gather_facts: false
+  gather_facts: true
 
   roles:
 
     - tonykay.envy.envy_manage_deployments
+    - tonykay.envy.envy_manage_inventory
 
-...
+#    - name: Generate in-memory inventory
+#      import_role:
+
+  tasks:
+
+    - name: Create env directory structure and files
+      import_role:
+        name: tonykay.envy.envy_manage_host_envy_configuration
+      vars:
+        envy_state: present
+      tags:
+        - host-config
+

@@ -68,7 +68,7 @@
     verbosity: 2
 
 - name: Write r_host_info
-  when: ansible_verbosity >= 2
+  #  when: ansible_verbosity >= 2
   template:
     src: r_host_info.json.j2
     dest: /tmp/r_host_info.json
