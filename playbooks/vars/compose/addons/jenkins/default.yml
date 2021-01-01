@@ -1,7 +1,7 @@
+---
 
-networks:
-  default:
-    name: example.com
+envy_addon_short_description: Jenkins - Installed running Jenkins with exposed port 81 on `jenkins`
+
 
 services:
   jenkins:

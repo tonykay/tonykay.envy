@@ -5,6 +5,8 @@
 # for workshops, labs etc
 #
 
+envy_addon_short_description: Classroom - A Front end lab/workshop server with a browser based terminal
+
 services:
 
 #  antora:

@@ -3,6 +3,8 @@
 # Setup vars
 
 VIRTUALENV_HOME=/opt/envy/venv-envy
+ENVY_HOME="${HOME}/.ansible/collections/ansible_collections/tonykay/envy"
+
 NUM_ARGS=$#
 ACTION=$1
 shift
@@ -12,10 +14,10 @@ usage ()
 {
   echo "USAGE: nv <action> <object> <extras>"
   echo
-
   echo "nv add <environment> <addon>            Add extra instance(s)"
+  echo "nv addons                               List all addons" 
   echo "nv clean                                Clean up old resources"
-  echo "nv deploy <environment>                 Deploy an Environment"
+  echo "nv up <environment>                     Deploy an Environment"
   echo "nv delete <environment>                 Delete an Environment"
   echo "nv fromfile <filename>                  Deploy an Environment from a file"
   echo "nv list                                 List running infrastucture"
@@ -123,21 +125,38 @@ cmd_login ()     # Update envy and other dependencies
 {
   docker exec -it "${1}" bash
 }  
+
 cmd_clean ()     # Update envy and other dependencies
 {
   docker network prune -f
   docker container prune -f
 }  
 
+
+cmd_addons ()     # List assons
+{
+  echo
+  echo Available Addons:
+  echo
+  # ls -ld vars/compose/addons/* | sed 's/^.*\///'
+  grep -r envy_addon_short_description "${ENVY_HOME}/playbooks/vars/compose/addons" | sed 's/^.*envy_addon_short_description: /    /'
+  #  grep -r envy_addon_short_description ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks/vars/compose/addons | sed 's/^.*envy_addon_short_description: /    /'
+  echo 
+}  
+
+
 process_cmd_line
 setup_nv_parameters
-activate_virtualenv
+#activate_virtualenv
 
 # cd  ~/.ansible/collections/ansible_collections/tonykay/envy/playbooks
 
 case "$ACTION" in
   add)
     cmd_add deploy $2 $3
+    ;;
+  addons)
+    cmd_addons 
     ;;
   clean)
     cmd_clean
@@ -170,7 +189,6 @@ case "$ACTION" in
     cmd_update
     ;;
   *)
-    # echo $"Usage: $0 {start|stop|restart|condrestart|status}"
     usage
     exit 1
      

@@ -1,5 +1,7 @@
 ---
 
+envy_addon_short_description: Tower - An empty RHEL instance `tower` for Ansible Tower deployment scenarios
+
 services:
   tower:
     container_name: tower
