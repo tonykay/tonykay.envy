@@ -4,7 +4,8 @@
   hosts: localhost
   connection: local
   gather_facts: true
-  envy_state: present
+  vars:
+    envy_state: present
 
   roles:
 

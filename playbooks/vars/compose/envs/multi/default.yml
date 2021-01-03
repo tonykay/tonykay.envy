@@ -1,11 +1,11 @@
 ---
 
-#
-#
-#
-#
-
 env_name: multi
+
+envy_env_short_description: "multi: A simple multi-tier application infrastructure control, frontend, app1, app2, database"
+envy_env_long_description: |
+  "multi: A simple multi-tier application infrastructure control, frontend, app1, app2, database"
+
 
 networks:
   default:

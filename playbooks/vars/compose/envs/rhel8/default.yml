@@ -1,0 +1,30 @@
+---
+
+envy_name:                    rhel8
+env_name:                    rhel8
+
+envy_env_short_description: "rhel8: A simple standalone rhel8 node with ssh and systemd/init"
+envy_env_long_description: |
+  "rhel8: A simple standalone rhel8 node with ssh and systemd/init"
+
+
+networks:
+  default:
+      name: dev.com
+
+services:
+
+  rhel8:
+    container_name: rhel8
+    hostname: rhel8
+    image: tonykay/vmlet-rhel-8-ansible
+    labels:
+      com.envy.env_name: "{{ env_name }}"
+    ports:
+      - "22"
+    privileged: true
+#    volumes:
+#      - "{{ envy_local_home }}/shared_dir/:/home/{{ envy_ssh_user }}/shared_dir:z,rw"
+#      - "{{ envy_local_home }}/repos/:/repos/:z,rw"
+
+...

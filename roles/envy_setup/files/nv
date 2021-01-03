@@ -133,7 +133,7 @@ cmd_clean ()     # Update envy and other dependencies
 }  
 
 
-cmd_addons ()     # List assons
+cmd_addons ()     # List Addons
 {
   echo
   echo Available Addons:
@@ -144,6 +144,16 @@ cmd_addons ()     # List assons
   echo 
 }  
 
+
+cmd_envs ()     # List Envs
+{
+  echo
+  echo Available Envs:
+  echo
+  grep -r envy_env_short_description "${ENVY_HOME}/playbooks/vars/compose/envs" \
+    | sed -e 's/^.*envy_env_short_description: / /' -e 's/"//g'
+  echo 
+}  
 
 process_cmd_line
 setup_nv_parameters
@@ -163,6 +173,9 @@ case "$ACTION" in
     ;;
   classroom | deploy | delete | redeploy)
     cmd_default $1 $2
+    ;;
+  envs)
+    cmd_envs
     ;;
   fromfile)
     cmd_fromfile
